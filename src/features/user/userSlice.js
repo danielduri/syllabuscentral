@@ -22,11 +22,12 @@ export const userSlice = createSlice({
         },
         [signIn.fulfilled]: (state, { payload }) => {
             state.loading = false
-            state.error = null
+            state.userInfo = payload.userInfo
+            state.token = payload.token
         },
-        [signIn.pending]: (state) => {
-            state.loading = true
-            state.error = null
+        [signIn.rejected]: (state, { payload }) => {
+            state.loading = false
+            state.error = payload
         },
 
         //createUser
