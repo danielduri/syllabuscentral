@@ -1,24 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button} from "react-bootstrap";
 import {ChangeEmail} from "./ChangeEmail";
 import {ChangeName} from "./ChangeName";
 import {ChangePassword} from "./ChangePassword";
-
-function getUser(user, setToken){
-
-    fetch("http://192.168.1.45:3001/userInfo", {
-        method: 'get',
-        headers: {"Content-type": "application/json"},
-    }).then(response => response.json())
-        .then(resp => {
-            if(resp.user.userID){
-                setToken(resp);
-            }else{
-                throw new Error("Error getting user");
-            }
-        })
-        .catch(error => {throw new Error(error)} );
-}
 
 const userType = (userType) => {
     switch (userType){
@@ -39,20 +23,6 @@ function Preferences({user, setuser}){
     const [ emailChange, setEmailChange ] = useState(false);
     const [ nameChange, setNameChange ] = useState(false);
     const [ passwordChange, setPasswordChange ] = useState(false);
-    //const [ renderChange, setRenderChange ] = useState(false);
-
-    //useEffect(getUser(user, setUserInfo), [])
-    /*
-    useEffect(()=>{
-        setRenderChange(!renderChange);
-        // eslint-disable-next-line
-    }, [emailChange, nameChange, passwordChange])
-    useEffect(()=>{
-        getUser(user, setToken);
-        // eslint-disable-next-line
-    }, [renderChange]);
-    *
-     */
 
     return(
         <div className="">

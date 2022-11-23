@@ -2,11 +2,14 @@ import {Button, Form, Modal} from "react-bootstrap";
 import './Modal.css'
 import {useEffect, useState} from "react";
 import tokenFetch from "../Common/tokenFetch";
+import {useDispatch} from "react-redux";
+import {changeEmail} from "../../features/user/userSlice";
 
 export function ChangeEmail(props) {
     const [newEmail, setNewEmail] = useState("");
     const [validated, setValidated] = useState(false);
     const [wrongEmail, setWrongEmail] = useState("");
+    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         setWrongEmail("");
@@ -33,15 +36,7 @@ export function ChangeEmail(props) {
             .then(resp => {
                 if(resp.email){
                     setValidated(true);
-                    props.setuser(user => {
-                        return {
-                            ...user,
-                            userInfo: {
-                                ...user.userInfo,
-                                email: resp.email
-                            }
-                        };
-                    });
+                    dispatch(changeEmail(resp));
                 }else{
                     if(resp==="email already in use"){
                         setWrongEmail("used");

@@ -1,49 +1,55 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {createUser, signIn} from "./userActions";
+
+const token = localStorage.getItem('jwtToken')
+    ? localStorage.getItem('jwtToken')
+    : null
 
 const initialState = {
-    loading: false,
     auth: false,
     userInfo: {},
-    token: null,
+    token: token,
     error: null,
-    success: false
 }
 
 export const userSlice = createSlice({
     name: 'user',
-    initialState,
-    reducers: {},
-    extraReducers: {
-        //signIn
-        [signIn.pending]: (state) => {
-            state.loading = true
-            state.error = null
+    initialState: initialState,
+    reducers: {
+        signIn: (state, action) => {
+            state.auth = true
+            state.token = action.payload.token
         },
-        [signIn.fulfilled]: (state, { payload }) => {
-            state.loading = false
-            state.userInfo = payload.userInfo
-            state.token = payload.token
+        signOut: (state) =>{
+            state.auth = false
+            state.userInfo = {}
+            state.token = null
         },
-        [signIn.rejected]: (state, { payload }) => {
-            state.loading = false
-            state.error = payload
+        updateUserInfo: (state, action) => {
+            state.auth = true
+            state.userInfo = action.payload.userInfo
         },
-
-        //createUser
-        [createUser.pending]: (state) => {
-            state.loading = true
-            state.error = null
+        wrongPassword: (state) =>  {
+            state.auth = false
+            state.error = "wrong password"
+            state.userInfo = {}
+            state.token = null
         },
-        [createUser.fulfilled]: (state, { payload }) => {
-            state.loading = false
-            state.success = true
+        changeName: (state, action) => {
+            state.userInfo.userName = action.payload.userName;
         },
-        [createUser.rejected]: (state, { payload }) => {
-            state.loading = false
-            state.error = payload
+        changeEmail: (state, action) => {
+            state.userInfo.email = action.payload.email;
+        },
+        sessionExpired: (state) => {
+            state.auth = false
+            state.userInfo = {}
+            state.token = null;
+            state.error = "session expired"
+            localStorage.removeItem('jwtToken')
         }
     }
 })
+
+export const { signIn, wrongPassword, signOut, updateUserInfo, changeEmail, changeName, sessionExpired } = userSlice.actions
 
 export default userSlice.reducer

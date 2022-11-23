@@ -1,7 +1,8 @@
 import React from "react";
-import {throwError} from "../Common/devFunctions";
+import {useSelector} from "react-redux";
 
-function Dash ({user}){
+function Dash (){
+    const user = useSelector((state) => state.user)
     return (
         <div>
             <div>

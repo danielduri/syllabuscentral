@@ -2,11 +2,14 @@ import {Button, Form, Modal} from "react-bootstrap";
 import './Modal.css'
 import {useEffect, useState} from "react";
 import tokenFetch from "../Common/tokenFetch";
+import {useDispatch} from "react-redux";
+import {changeName} from "../../features/user/userSlice";
 
 export function ChangeName(props) {
     const [newName, setNewName] = useState("");
     const [validated, setValidated] = useState(false);
     const [wrongName, setWrongName] = useState(false);
+    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         setWrongName(false);
@@ -33,15 +36,7 @@ export function ChangeName(props) {
             .then(resp => {
                 if(resp.userName){
                     setValidated(true);
-                    props.setuser(user => {
-                        return {
-                            ...user,
-                            userInfo: {
-                                ...user.userInfo,
-                                userName: resp.userName
-                            }
-                        };
-                    });
+                    dispatch(changeName(resp));
                 }else{
                     if(resp==="invalid name"){
                         setWrongName(true);
