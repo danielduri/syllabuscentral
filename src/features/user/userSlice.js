@@ -18,11 +18,13 @@ export const userSlice = createSlice({
         signIn: (state, action) => {
             state.auth = true
             state.token = action.payload.token
+            state.error = null
         },
         signOut: (state) =>{
             state.auth = false
             state.userInfo = {}
             state.token = null
+            state.error = null
         },
         updateUserInfo: (state, action) => {
             state.auth = true
