@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useEffect, useRef} from "react";
+import React, {useEffect} from "react";
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Login from "../Login/Login";
 import Dash from "../Dash/Dash";
@@ -12,8 +12,6 @@ import tokenFetch from "../Common/tokenFetch";
 import {sessionExpired, updateUserInfo} from "../../features/user/userSlice";
 
 function App(){
-
-    const renderLogin = useRef(!localStorage.getItem('jwtToken'));
 
     const user = useSelector ((state) => state.user);
     const token = user.token;
@@ -28,7 +26,6 @@ function App(){
                 .then(resp => {
                     if(resp==='Token Expired'){
                         dispatch(sessionExpired());
-                        renderLogin.current=true;
                     }else{
                         dispatch(updateUserInfo(resp));
                     }
@@ -53,9 +50,7 @@ function App(){
               </ErrorBoundary>
           </div>
       )
-  }
-
-  if(renderLogin.current){
+  }else{
       return (
           <ErrorBoundary>
               <Login/>

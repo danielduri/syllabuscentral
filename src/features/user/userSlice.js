@@ -5,7 +5,7 @@ const token = localStorage.getItem('jwtToken')
     : null
 
 const initialState = {
-    auth: false,
+    auth: token!==null,
     userInfo: {},
     token: token,
     error: null,
@@ -27,7 +27,6 @@ export const userSlice = createSlice({
             state.error = null
         },
         updateUserInfo: (state, action) => {
-            state.auth = true
             state.userInfo = action.payload.userInfo
         },
         wrongPassword: (state) =>  {
