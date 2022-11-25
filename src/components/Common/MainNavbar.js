@@ -2,19 +2,20 @@ import React from "react";
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {signOut} from "../../features/user/userSlice";
+import {NavLink} from "react-router-dom";
 
 
 const navbarText = (user, logout) => {
     if(user.auth){
         return <>
-            <Nav.Link className="nav-item nav-link dib" href="/dash" title="Dash">Panel</Nav.Link>
-            <Nav.Link className="nav-item nav-link dib" href="/preferences" title="Preferences">Preferencias</Nav.Link>
-            <Nav.Link className="nav-item nav-link dib" href="/test" title="Test">Test</Nav.Link>
-            <Nav.Link className="nav-item nav-link dib" href="/" onClick={logout} title="Logout">Cerrar sesión</Nav.Link>
+            <NavLink className="nav-item nav-link dib" to="/dash" title="Dash">Panel</NavLink>
+            <NavLink className="nav-item nav-link dib" to="/preferences" title="Preferences">Preferencias</NavLink>
+            <NavLink className="nav-item nav-link dib" to="/test" title="Test">Test</NavLink>
+            <NavLink className="nav-item nav-link dib" to="/" onClick={logout} title="Logout">Cerrar sesión</NavLink>
         </>
     }else{
         return <>
-            <Nav.Link className="nav-item nav-link dib" href="/" title="Logout">Iniciar sesión</Nav.Link>
+            <NavLink className="nav-item nav-link dib" to="/" title="Logout">Iniciar sesión</NavLink>
         </>
     }
 }

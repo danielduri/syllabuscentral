@@ -1,6 +1,6 @@
 import './App.css';
 import React, {useEffect, useRef} from "react";
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Login from "../Login/Login";
 import Dash from "../Dash/Dash";
 import Preferences from "../Preferences/Preferences";
@@ -42,15 +42,13 @@ function App(){
               <ErrorBoundary>
                   <MainNavbar/>
                   <div className={"content pa4"}>
-                      <BrowserRouter>
                           <Routes>
                               <Route path="/" element={<Navigate replace to={"/dash"}/>} />
                               <Route path="*" element={<Navigate replace to={"/dash"}/>} />
-                              <Route path="/dash" element={<Dash user={user}/>} />
-                              <Route path="/test" element={<Test user={user}/>} />
+                              <Route path="/dash" element={<Dash />} />
+                              <Route path="/test" element={<Test />} />
                               <Route path="/preferences" element={<Preferences user={user}/>} />
                           </Routes>
-                      </BrowserRouter>
                   </div>
               </ErrorBoundary>
           </div>

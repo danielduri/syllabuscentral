@@ -2,13 +2,14 @@ import {Button, Form, Modal} from "react-bootstrap";
 import './Modal.css'
 import {useEffect, useState} from "react";
 import tokenFetch from "../Common/tokenFetch";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {changeName} from "../../features/user/userSlice";
 
 export function ChangeName(props) {
     const [newName, setNewName] = useState("");
     const [validated, setValidated] = useState(false);
     const [wrongName, setWrongName] = useState(false);
+    const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
@@ -61,7 +62,7 @@ export function ChangeName(props) {
             </Modal.Header>
 
             <Modal.Body>
-                <h4>{props.user.userInfo.userName}</h4>
+                <h4>{user.userInfo.userName}</h4>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3 pv3" controlId="formBasicEmail">
                         <Form.Label>Nuevo nombre</Form.Label>

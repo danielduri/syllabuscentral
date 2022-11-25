@@ -3,6 +3,7 @@ import {Button} from "react-bootstrap";
 import {ChangeEmail} from "./ChangeEmail";
 import {ChangeName} from "./ChangeName";
 import {ChangePassword} from "./ChangePassword";
+import {useSelector} from "react-redux";
 
 const userType = (userType) => {
     switch (userType){
@@ -17,12 +18,12 @@ const userType = (userType) => {
     }
 }
 
-function Preferences({user, setuser}){
+function Preferences(){
 
-    //TODO: figure out userSession
     const [ emailChange, setEmailChange ] = useState(false);
     const [ nameChange, setNameChange ] = useState(false);
     const [ passwordChange, setPasswordChange ] = useState(false);
+    const user = useSelector((state) => state.user);
 
     return(
         <div className="">
@@ -53,7 +54,7 @@ function Preferences({user, setuser}){
                                 <h3>{user.userInfo.email}</h3>
                                 <div className="">
                                     <Button variant={"primary"} onClick={() => setEmailChange(true)}>Cambiar correo electrónico</Button>
-                                    <ChangeEmail show={emailChange} user={user} setuser={setuser} onHide={() => setEmailChange(false)}/>
+                                    <ChangeEmail show={emailChange} user={user} onHide={() => setEmailChange(false)}/>
                                 </div>
                             </div>
 
@@ -62,7 +63,7 @@ function Preferences({user, setuser}){
                                 <h3>{user.userInfo.userName}</h3>
                                 <div className="">
                                     <Button variant={"primary"} onClick={() => setNameChange(true)}>Cambiar nombre</Button>
-                                    <ChangeName show={nameChange} user={user} setuser={setuser} onHide={() => setNameChange(false)}></ChangeName>
+                                    <ChangeName show={nameChange} onHide={() => setNameChange(false)}></ChangeName>
                                 </div>
                             </div>
 
@@ -75,7 +76,7 @@ function Preferences({user, setuser}){
                                 <label className="db fw6 lh-copy f6" htmlFor="name">Contraseña</label>
                                 <div className="">
                                     <Button variant={"primary mv2"} onClick={() => setPasswordChange(true)}>Cambiar contraseña</Button>
-                                    <ChangePassword show={passwordChange} user={user} onHide={() => setPasswordChange(false)}></ChangePassword>
+                                    <ChangePassword show={passwordChange} onHide={() => setPasswordChange(false)}></ChangePassword>
                                 </div>
                             </div>
 

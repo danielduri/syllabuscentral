@@ -25,7 +25,7 @@ export function ChangePassword(props) {
             setValidated(false);
             props.onHide();
         }
-    }, [wrongNewPassword, wrongOldPassword, passwordsNotMatch,validated])
+    }, [wrongNewPassword, wrongOldPassword, passwordsNotMatch, validated, props])
 
     useEffect(() => {
         if(newPassword!==newPassword2){

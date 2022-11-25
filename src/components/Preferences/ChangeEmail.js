@@ -2,13 +2,14 @@ import {Button, Form, Modal} from "react-bootstrap";
 import './Modal.css'
 import {useEffect, useState} from "react";
 import tokenFetch from "../Common/tokenFetch";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {changeEmail} from "../../features/user/userSlice";
 
 export function ChangeEmail(props) {
     const [newEmail, setNewEmail] = useState("");
     const [validated, setValidated] = useState(false);
     const [wrongEmail, setWrongEmail] = useState("");
+    const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
@@ -65,7 +66,7 @@ export function ChangeEmail(props) {
             </Modal.Header>
 
             <Modal.Body>
-                <h4>{props.user.userInfo.email}</h4>
+                <h4>{user.userInfo.email}</h4>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3 pv3" controlId="formBasicEmail">
                         <Form.Label>Nuevo correo electrónico</Form.Label>
