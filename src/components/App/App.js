@@ -22,14 +22,14 @@ function App(){
             tokenFetch('userInfo', {
                 method: 'get',
                 headers: {"Content-type": "application/json"},
-            }).then(resp => {
-                if (resp !== undefined){
-                    if(resp.userInfo){
+            }).then(response => response.json())
+                .then(resp => {
+                    if(resp==='Token Expired'){
+                        dispatch(sessionExpired());
+                    }else{
                         dispatch(updateUserInfo(resp));
                     }
-                }
-            })
-                .catch(error => console.log(error))
+                })
         }
     },[dispatch, token])
 
