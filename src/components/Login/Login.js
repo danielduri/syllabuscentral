@@ -19,7 +19,7 @@ const Login = () => {
     }
 
     const onSubmitSignIn = () => {
-        fetch("http://192.168.1.45:3001/signIn", {
+        fetch("https://syllabusbackend.herokuapp.com/signIn", {
             method: 'post',
             headers: {"Content-type": "application/json"},
             body: JSON.stringify({
