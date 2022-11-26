@@ -27,7 +27,7 @@ export function ChangeName(props) {
     }, [wrongName, validated, props])
 
     const handleNameChange = () => {
-        tokenFetch("http://192.168.1.45:3001/changeName", {
+        tokenFetch("changeName", {
             method: 'put',
             headers: {"Content-type": "application/json"},
             body: JSON.stringify({

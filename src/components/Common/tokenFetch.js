@@ -9,7 +9,8 @@ function updateOptions(options) {
     return update;
 }
 
-export default function tokenFetch(url, options) {
+export default function tokenFetch(endpoint, options) {
+    const url=`http://192.168.1.45:3001/${endpoint}`
     return fetch(url, updateOptions(options));
 }
 

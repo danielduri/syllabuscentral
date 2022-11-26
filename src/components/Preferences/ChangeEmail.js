@@ -27,7 +27,7 @@ export function ChangeEmail(props) {
     }, [wrongEmail, validated, props])
 
     const handleEmailChange = () => {
-        tokenFetch("http://192.168.1.45:3001/changeEmail", {
+        tokenFetch("changeEmail", {
             method: 'put',
             headers: {"Content-type": "application/json"},
             body: JSON.stringify({

@@ -37,7 +37,7 @@ export function ChangePassword(props) {
 
     const handlePasswordChange = () => {
         if(!passwordsNotMatch){
-            tokenFetch("http://192.168.1.45:3001/changePassword", {
+            tokenFetch("changePassword", {
                 method: 'put',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({

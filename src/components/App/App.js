@@ -19,7 +19,7 @@ function App(){
 
     useEffect(() => {
         if (token !== null && token !== undefined) {
-            tokenFetch('http://192.168.1.45:3001/userInfo', {
+            tokenFetch('userInfo', {
                 method: 'get',
                 headers: {"Content-type": "application/json"},
             }).then(response => response.json())
