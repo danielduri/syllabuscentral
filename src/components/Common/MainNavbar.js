@@ -11,7 +11,6 @@ const navbarText = (user, logout) => {
             <NavLink className="nav-item nav-link dib" to="/dash" title="Dash">Panel</NavLink>
             <NavLink className="nav-item nav-link dib" to="/preferences" title="Preferences">Preferencias</NavLink>
             <NavLink className="nav-item nav-link dib" to="/models" title="Models">Modelos</NavLink>
-            <NavLink className="nav-item nav-link dib" to="/test" title="Test">Test</NavLink>
             <NavLink className="nav-item nav-link dib" to="/" onClick={logout} title="Logout">Cerrar sesión</NavLink>
         </>
     }else{

@@ -6,7 +6,6 @@ import Dash from "../Dash/Dash";
 import Preferences from "../Preferences/Preferences";
 import ErrorBoundary from "../Common/ErrorBoundary"
 import MainNavbar from "../Common/MainNavbar";
-import Test from "../Test/test";
 import {useDispatch, useSelector} from "react-redux";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 import {updateUserInfo} from "../../features/user/userSlice";
@@ -23,14 +22,14 @@ function App(){
             tokenFetch('userInfo', {
                 method: 'get',
                 headers: {"Content-type": "application/json"},
-            }).then(resp => {
-                if (resp !== undefined){
-                    if(resp.userInfo){
+            }).then(response => response.json())
+                .then(resp => {
+                    if(resp==='Token Expired'){
+                        dispatch(sessionExpired());
+                    }else{
                         dispatch(updateUserInfo(resp));
                     }
-                }
-            })
-                .catch(error => console.log(error))
+                })
         }
     },[dispatch, token])
 
@@ -44,7 +43,6 @@ function App(){
                               <Route path="/" element={<Navigate replace to={"/dash"}/>} />
                               <Route path="*" element={<Navigate replace to={"/dash"}/>} />
                               <Route path="/dash" element={<Dash />} />
-                              <Route path="/test" element={<Test />} />
                               <Route path="/preferences" element={<Preferences/>} />
                               <Route path="/models" element={<Models/>} />
                           </Routes>
