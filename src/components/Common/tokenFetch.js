@@ -10,7 +10,7 @@ function updateOptions(options) {
 }
 
 export default function tokenFetch(endpoint, options) {
-    const url=`http://192.168.1.45:3001/${endpoint}`
+    const url=`https://syllabusbackend.herokuapp.com/${endpoint}`
     return fetch(url, updateOptions(options));
 }
 
