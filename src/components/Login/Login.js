@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {signIn, wrongPassword} from "../../features/user/userSlice";
+import tokenFetch from "../Common/functions/tokenFetch";
 
 const Login = () => {
 
@@ -18,8 +19,8 @@ const Login = () => {
         setSignInPassword(event.target.value)
     }
 
-    const onSubmitSignIn = () => {
-        fetch("http://192.168.1.45:3001/signIn", {
+    const handleLogin = () => {
+        tokenFetch("signIn", {
             method: 'post',
             headers: {"Content-type": "application/json"},
             body: JSON.stringify({
@@ -79,7 +80,7 @@ const Login = () => {
 
                             <div className="">
                                 <input className="black b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
-                                       type="submit" value="Entrar" onClick={onSubmitSignIn}/>
+                                       type="submit" value="Entrar" onClick={handleLogin}/>
                             </div>
                         </div>
                     </main>
