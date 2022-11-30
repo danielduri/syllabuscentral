@@ -33,8 +33,8 @@ export function ChangeName(props) {
             body: JSON.stringify({
                 newName: newName,
             })
-        }).then(response => response.json())
-            .then(resp => {
+        }).then(resp => {
+            if(resp!==undefined){
                 if(resp.userName){
                     setValidated(true);
                     dispatch(changeName(resp));
@@ -43,7 +43,8 @@ export function ChangeName(props) {
                         setWrongName(true);
                     }
                 }
-            })
+            }
+        })
             .catch(error => {throw new Error(error)});
     }
 

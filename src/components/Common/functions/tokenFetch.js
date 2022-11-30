@@ -12,21 +12,17 @@ function updateOptions(options) {
     return update;
 }
 
-export function tokenFetch(endpoint, options) {
-    const url=`http://192.168.1.45:3001/${endpoint}`
-    return fetch(url, updateOptions(options));
-}
-
-export function tokenFetch2(endpoint, options) {
-    const url=`http://192.168.1.45:3001/${endpoint}`
-    let result = fetch(url, updateOptions(options));
-    result = result.json();
-    if(result==="Token Expired"){
-        store.dispatch(sessionExpired());
-        return;
-    }
-    return result;
-
+export async function tokenFetch(endpoint, options) {
+    const url = `http://192.168.1.45:3001/${endpoint}`
+    return fetch(url, updateOptions(options))
+        .then(result => result.json())
+        .then(json => {
+        if (json === "Token Expired") {
+            store.dispatch(sessionExpired());
+            return;
+        }
+        return json;
+    });
 }
 
 //https://stackoverflow.com/questions/44820568/set-default-header-for-every-fetch-request

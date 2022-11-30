@@ -44,8 +44,8 @@ export function ChangePassword(props) {
                     newPassword: newPassword,
                     oldPassword: oldPassword
                 })
-            }).then(response => response.json())
-                .then(resp => {
+            }).then(resp => {
+                if(resp!==undefined){
                     if(resp==="OK"){
                         setValidated(true);
                     }else{
@@ -56,7 +56,8 @@ export function ChangePassword(props) {
                             setWrongNewPassword(true);
                         }
                     }
-                })
+                }
+            })
                 .catch(error => {throw new Error(error)});
         }
     }

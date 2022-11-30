@@ -9,7 +9,7 @@ import MainNavbar from "../Common/MainNavbar";
 import Test from "../Test/test";
 import {useDispatch, useSelector} from "react-redux";
 import {tokenFetch} from "../Common/functions/tokenFetch";
-import {sessionExpired, updateUserInfo} from "../../features/user/userSlice";
+import {updateUserInfo} from "../../features/user/userSlice";
 
 function App(){
 
@@ -22,14 +22,14 @@ function App(){
             tokenFetch('userInfo', {
                 method: 'get',
                 headers: {"Content-type": "application/json"},
-            }).then(response => response.json())
-                .then(resp => {
-                    if(resp==='Token Expired'){
-                        dispatch(sessionExpired());
-                    }else{
+            }).then(resp => {
+                if (resp !== undefined){
+                    if(resp.userInfo){
                         dispatch(updateUserInfo(resp));
                     }
-                })
+                }
+            })
+                .catch(error => console.log(error))
         }
     },[dispatch, token])
 

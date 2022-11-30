@@ -33,8 +33,8 @@ export function ChangeEmail(props) {
             body: JSON.stringify({
                 newEmail: newEmail,
             })
-        }).then(response => response.json())
-            .then(resp => {
+        }).then(resp => {
+            if(resp!==undefined){
                 if(resp.email){
                     setValidated(true);
                     dispatch(changeEmail(resp));
@@ -46,7 +46,8 @@ export function ChangeEmail(props) {
                         setWrongEmail("invalid");
                     }
                 }
-            })
+            }
+        })
             .catch(error => {throw new Error(error)});
 
     }

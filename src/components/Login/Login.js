@@ -27,15 +27,16 @@ const Login = () => {
                 email: signInEmail,
                 password: signInPassword
             })
-        }).then(response => response.json())
-            .then(resp => {
+        }).then(resp => {
+            if(resp !== undefined){
                 if(resp.token){
                     dispatch(signIn(resp))
                     localStorage.setItem('jwtToken', resp.token)
                 }else{
                     dispatch(wrongPassword());
                 }
-            })
+            }
+        })
             .catch(error => console.log(error))
     }
 
