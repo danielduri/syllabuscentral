@@ -1,7 +1,7 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import './Modal.css'
 import {useEffect, useState} from "react";
-import tokenFetch from "../Common/functions/tokenFetch";
+import {tokenFetch} from "../Common/functions/tokenFetch";
 
 export function ChangePassword(props) {
     const [newPassword, setNewPassword] = useState("");

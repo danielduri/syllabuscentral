@@ -8,7 +8,7 @@ import ErrorBoundary from "../Common/ErrorBoundary"
 import MainNavbar from "../Common/MainNavbar";
 import Test from "../Test/test";
 import {useDispatch, useSelector} from "react-redux";
-import tokenFetch from "../Common/functions/tokenFetch";
+import {tokenFetch} from "../Common/functions/tokenFetch";
 import {sessionExpired, updateUserInfo} from "../../features/user/userSlice";
 
 function App(){

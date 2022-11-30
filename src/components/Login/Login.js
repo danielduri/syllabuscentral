@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {signIn, wrongPassword} from "../../features/user/userSlice";
-import tokenFetch from "../Common/functions/tokenFetch";
+import {tokenFetch} from "../Common/functions/tokenFetch";
 
 const Login = () => {
 
