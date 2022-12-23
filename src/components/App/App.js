@@ -10,6 +10,7 @@ import Test from "../Test/test";
 import {useDispatch, useSelector} from "react-redux";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 import {updateUserInfo} from "../../features/user/userSlice";
+import Sources from "../Sources/Sources";
 
 function App(){
 
@@ -44,7 +45,8 @@ function App(){
                               <Route path="*" element={<Navigate replace to={"/dash"}/>} />
                               <Route path="/dash" element={<Dash />} />
                               <Route path="/test" element={<Test />} />
-                              <Route path="/preferences" element={<Preferences user={user}/>} />
+                              <Route path="/preferences" element={<Preferences/>} />
+                              <Route path="/sources" element={<Sources/>} />
                           </Routes>
                   </div>
               </ErrorBoundary>
