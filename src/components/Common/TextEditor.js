@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import './textEditor.css'
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -28,22 +28,24 @@ export const arrayRegenerate = (string) => {
 const TextEditor = (props) => {
     const [lineCountCache, setLineCountCache] = useState(0)
 
-    let defaultValue=useRef("")
+    //let defaultValue=useRef("")
 
     useEffect(()=>{
-        setLineCountCache(defaultValue.current.split("\n").length)
-        defaultValue.current=props.defaultValue
-    }, [props.defaultValue])
+        if(props.value){
+            setLineCountCache(props.value.split("\n").length)
+        }
+    }, [props.value])
 
 
     return(
         <div>
             <p id='lineCounter'> {lineCountCache} </p>
-            <TextareaAutosize className={"form-control"} defaultValue={defaultValue.current} id='codeEditor' wrap='on'
+            <TextareaAutosize className={"form-control"} value={props.value} id='codeEditor' wrap='on'
                               onChange={e => {
                                     setLineCountCache(e.target.value.split('\n').length)
                                     props.onChange(e.target.value)
                               }}
+                              disabled={props.disabled}
                               placeholder={"Asegúrate que el número de ítems totales que deseas poner es igual al número de líneas mostrado a la izquierda"}></TextareaAutosize>
         </div>
     )

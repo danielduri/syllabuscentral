@@ -2,8 +2,7 @@ import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import Unauthorized from "../Common/Unauthorized";
 import {Button, Form} from "react-bootstrap";
-import {ChangeName} from "../Preferences/ChangeName";
-import {NewModel} from "./NewModel";
+import {ModelViewer} from "./ModelViewer";
 
 function Sources (){
 
@@ -170,6 +169,9 @@ function Sources (){
     const user = useSelector((state) => state.user)
     const [searchText, changeSearchText] = useState("");
     const [ newModel, setNewModel ] = useState(false);
+    const [ edit, setEdit ] = useState(false);
+    const [ view, setView ] = useState(false);
+
 
     if(user.userInfo.userType===2){
         return (
@@ -185,8 +187,18 @@ function Sources (){
                     <Button variant="outline-success" >Buscar</Button>
                 </Form>
                 <div className={"center tc pa3"}>
-                    <Button variant={"success"} className={"w-25 center"} onClick={() => setNewModel(true)}>+ Nuevo modelo</Button>
-                    <NewModel show={newModel} model={model} onHide={() => setNewModel(false)}></NewModel>
+                    <Button variant={"success"} className={"w-25 center"} onClick={() => setNewModel(true)}>
+                        Nuevo modelo</Button>
+                    <ModelViewer show={newModel} mode={"edit"} onHide={() => setNewModel(false)}></ModelViewer>
+
+                    <Button variant={"success"} className={"w-25 center"} onClick={() => setView(true)}>
+                        Ver modelo</Button>
+                    <ModelViewer show={view} mode={"view"} model={model} onHide={() => setView(false)}></ModelViewer>
+
+                    <Button variant={"success"} className={"w-25 center"} onClick={() => setEdit(true)}>
+                        Editar modelo</Button>
+                    <ModelViewer show={edit} mode={"edit"} model={model} onHide={() => setEdit(false)}></ModelViewer>
+
                 </div>
             </div>
         )
