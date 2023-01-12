@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {Accordion, Button, Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
 import './Modal.css'
 import React, {useEffect, useRef, useState} from "react";
@@ -88,11 +89,7 @@ export function ModelViewer(props) {
 
     const testCode = (c) => {
         if(c!==""){
-            if(/\D/.test(code)){
-                return false
-            }else{
-                return true
-            }
+            return !/\D/.test(code);
         }else{
             return true
         }
@@ -118,11 +115,7 @@ export function ModelViewer(props) {
     const testShorthand = (sh) => {
         if(shorthand!==""){
             let regex = /^[\w-_.]*$/;
-            if(sh.length<2 || sh.length>5 || !regex.test(sh)){
-                return false
-            }else{
-                return true
-            }
+            return !(sh.length < 2 || sh.length > 5 || !regex.test(sh));
         }else{
             return true
         }
