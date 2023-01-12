@@ -1,4 +1,4 @@
-import {Accordion, Button, Form, Modal} from "react-bootstrap";
+import {Accordion, Button, Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
 import './Modal.css'
 import React, {useEffect, useRef, useState} from "react";
 import Select from "react-select";
@@ -7,18 +7,37 @@ import TextEditor, {arrayRegenerate, arrayStringify} from "../Common/TextEditor"
 import TextareaAutosize from "react-textarea-autosize";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 
-//TODO upload syllabus and figure out valitadion logic
 //TODO deploy to production
+//TODO handle backend responses
+//TODO support for additional fields
 
 export function ModelViewer(props) {
+
+    const init = () => {
+        if (props.show) {
+            if(props.mode==="create"){
+                setEdit(true)
+                setCodeIsEditable(true)
+                loadData(true).then(r => null)
+            }else if(props.mode==="edit"){
+                setEdit(true)
+                loadData(true).then(r => null)
+            }else if(props.mode==="copy"){
+                setEdit(true)
+                loadData(true).then(() => {})
+                setCodeIsEditable(true)
+            } else {
+                setEdit(false)
+                loadModel(false).then(r => null)
+            }
+        }
+    }
 
     const modalRef = useRef();
 
     const scrollToTop = () => {
         modalRef.current?.scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
-
-    console.log("render")
 
     const [edit, setEdit]=useState(false)
 
@@ -31,7 +50,7 @@ export function ModelViewer(props) {
         Buttons: delete/save/cancel
 
     in create, all fields are enabled and uses emptyModel
-        Buttons: delete/save/cancel
+        Buttons: save/cancel
      */
 
     const generateOption = (value) => {
@@ -64,13 +83,26 @@ export function ModelViewer(props) {
 
     const [code, setCode] = useState("");
     const [invalidCode, setInvalidCode] = useState(false);
-    useEffect(()=>{
-        if(code!==""){
+    const [codeIsEditable, setCodeIsEditable] = useState(false);
+    const [codeFeedback, setCodeFeedback] = useState("El código debe ser numérico");
+
+    const testCode = (c) => {
+        if(c!==""){
             if(/\D/.test(code)){
-                setInvalidCode(true)
+                return false
             }else{
-                setInvalidCode(false)
+                return true
             }
+        }else{
+            return true
+        }
+    }
+
+    useEffect(()=>{
+        if (testCode(code)){
+            setInvalidCode(false)
+        }else{
+            setInvalidCode(true)
         }
     },[code])
 
@@ -83,14 +115,24 @@ export function ModelViewer(props) {
     const [shorthand, setShorthand] = useState("");
     const [invalidShorthand, setInvalidShorthand] = useState(false);
 
-    useEffect(()=>{
+    const testShorthand = (sh) => {
         if(shorthand!==""){
             let regex = /^[\w-_.]*$/;
-            if(shorthand.length<2 || shorthand.length>5 || !regex.test(shorthand)){
-                setInvalidShorthand(true)
+            if(sh.length<2 || sh.length>5 || !regex.test(sh)){
+                return false
             }else{
-                setInvalidShorthand(false)
+                return true
             }
+        }else{
+            return true
+        }
+    }
+
+    useEffect(()=>{
+        if (testShorthand(shorthand)){
+            setInvalidShorthand(false)
+        }else {
+            setInvalidShorthand(true)
         }
     },[shorthand])
 
@@ -101,7 +143,8 @@ export function ModelViewer(props) {
     const typeOptions = [
         generateOption("Formación Básica"),
         generateOption("Optativa"),
-        generateOption("Obligatoria")
+        generateOption("Obligatoria"),
+        generateOption("Trabajo de fin de grado")
     ]
     const [invalidType, setInvalidType] = useState(false);
 
@@ -148,29 +191,51 @@ export function ModelViewer(props) {
     const [literature, setLiterature] = useState("");
     const [invalidLiterature, setInvalidLiterature] = useState(false);
 
-    let buttonArray = [
-        <Button variant="success" onClick={() => {
-            scrollToTop();
-            setEdit(true)
-        }}>Editar</Button>,
-        <Button variant={"danger"} onClick={props.onHide}>Cancelar</Button>
-    ]
+    async function loadData(editing){
+        let degOp = []
+        let depOp = []
+
+        await tokenFetch('newModel', {
+            method: 'put',
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify({
+                reqType: "initial",
+            })
+        }).then(res => {
+            for (const resElement of res.degrees) {
+                degOp.push(generateOptionWithValue(resElement.degreeDisplayName, resElement.degreeID))
+            }
+            for (const resElement of res.departments) {
+                depOp.push(generateOptionWithValue(resElement.departmentName, resElement.departmentID))
+            }
+            setDegreeOptions(degOp)
+            setDepartmentOptions(depOp)
+            loadModel(editing)
+        })
+    }
+
+    function toggleEdit() {
+        scrollToTop();
+        loadData(true).then(r => {
+            setEdit(!edit);
+        })
+    }
 
     const emptyModel = {
-        degree: null,
-        year: null,
-        period: null,
-        language: null,
+        degree: "",
+        year: "",
+        period: "",
+        language: "",
         code: "",
         name: "",
         intlName: "",
         shorthand: "",
-        type: null,
-        ECTS: null,
-        subject: null,
-        module: null,
-        department: null,
-        coordinator: null,
+        type: "",
+        ECTS: "",
+        subject: "",
+        module: "",
+        department: "",
+        coordinator: "",
         minContents: "",
         program: "",
         results: "",
@@ -187,35 +252,42 @@ export function ModelViewer(props) {
     const [degreeOptions, setDegreeOptions] = useState([])
 
 
-    async function prepareModel(model) {
-        model.ECTS = generateOption(Number.parseFloat(model.ECTS))
-        model.language = generateOption(model.language)
+    async function prepareModel(model, editing) {
+        let readyModel = JSON.parse(JSON.stringify(model))
+        readyModel.ECTS = generateOption(Number.parseFloat(model.ECTS))
+        readyModel.language = generateOption(model.language)
         if (Number.parseInt(model.period) > 0) {
-            model.period = generateOption(model.period)
+            readyModel.period = generateOption(model.period)
         } else {
-            model.period = generateOptionWithValue("Ninguno", null)
+            readyModel.period = generateOptionWithValue("Ninguno", 0)
         }
         if (Number.parseInt(model.year) > 0) {
-            model.year = generateOptionWithValue(`${model.year}º`, model.year)
+            readyModel.year = generateOptionWithValue(`${model.year}º`, model.year)
         } else {
-            model.year = null
+            readyModel.year = null
         }
-        model.type = generateOptionWithValue(model.type)
+        readyModel.type = generateOption(model.type)
 
-        model.minContents = arrayStringify(model.minContents)
-        model.program = arrayStringify(model.program)
-        model.results = arrayStringify(model.results)
-        model.literature = arrayStringify(model.literature)
-        model.competences.basic = arrayStringify(model.competences.basic)
-        model.competences.general = arrayStringify(model.competences.general)
-        model.competences.specific = arrayStringify(model.competences.specific)
+        readyModel.minContents = arrayStringify(model.minContents)
+        readyModel.program = arrayStringify(model.program)
+        readyModel.results = arrayStringify(model.results)
+        readyModel.literature = arrayStringify(model.literature)
+        const comp = JSON.parse(model.competences)
+        readyModel.competences = {
+            basic: arrayStringify(comp.basic),
+            general: arrayStringify(comp.general),
+            specific: arrayStringify(comp.specific)
+        }
+        //readyModel.competences.basic = arrayStringify(comp.basic)
+        //readyModel.competences.general = arrayStringify(comp.general)
+        //readyModel.competences.specific = arrayStringify(comp.specific)
 
-        if(!edit){
-            model.degree=generateOption(model.degree)
-            model.department=generateOption(model.department)
-            model.module=generateOption(model.module)
-            model.subject=generateOption(model.subject)
-            model.coordinator=generateOption(model.coordinator)
+        if(!editing){
+            readyModel.degree=generateOption(model.degree)
+            readyModel.department=generateOption(model.department)
+            readyModel.module=generateOption(model.module)
+            readyModel.subject=generateOption(model.subject)
+            readyModel.coordinator=generateOption(model.coordinator)
         }else{
             await tokenFetch('newModel', {
                 method: 'put',
@@ -231,64 +303,58 @@ export function ModelViewer(props) {
                 })
             }).then(res => {
                 if(res.degree){
-                    model.degree = generateOptionWithValue(res.degree.degreeDisplayName, res.degree.degreeID)
+                    readyModel.degree = generateOptionWithValue(res.degree.degreeDisplayName, res.degree.degreeID)
                     populateDegreeOptions(res)
                 }else{
-                    model.degree = emptyModel.degree
+                    readyModel.degree = emptyModel.degree
                 }
 
                 if(res.department){
-                    model.department = generateOptionWithValue(model.department, res.department.departmentID)
+                    readyModel.department = generateOptionWithValue(model.department, res.department.departmentID)
                     populateDepartmentUsers(res)
                 }else{
-                    model.department = emptyModel.department
+                    readyModel.department = emptyModel.department
                 }
 
                 if(res.module){
-                    model.module = generateOptionWithValue(model.module, res.module.moduleID)
+                    readyModel.module = generateOptionWithValue(model.module, res.module.moduleID)
                 }else{
-                    model.module = generateOptionWithValue(model.module, null)
+                    readyModel.module = generateOption(model.module)
                 }
 
                 if(res.subject){
-                    model.subject = generateOptionWithValue(model.subject, res.subject.subjectID)
+                    readyModel.subject = generateOptionWithValue(model.subject, res.subject.subjectID)
                 }else{
-                    model.subject = generateOptionWithValue(model.subject, null)
+                    readyModel.subject = generateOption(model.subject)
                 }
 
                 if(res.coordinator){
-                    model.coordinator = generateOptionWithValue(model.coordinator, res.coordinator.userID)
+                    readyModel.coordinator = generateOptionWithValue(model.coordinator, res.coordinator.userID)
                 }else{
-                    model.coordinator = emptyModel.coordinator
+                    readyModel.coordinator = emptyModel.coordinator
                 }
 
             })
         }
 
-        return model
+        return readyModel
 
     }
 
-    async function loadModel() {
+    async function loadModel(editing) {
         let model = emptyModel
         if (props.model !== undefined) {
-            await prepareModel(props.model).then(result => {
+            await prepareModel(props.model, editing).then(result => {
                 model = result;
             })
         }
-        console.log("This is the model you gave me", model)
-        setDegree(model.degree);
-        setYear(model.year)
         setPeriod(model.period)
         setLanguage(model.language)
-        setCode(model.code)
         setCourseName(model.name)
         setIntlName(model.intlName)
         setShorthand(model.shorthand)
         setType(model.type)
         setECTS(model.ECTS)
-        setSubject(model.subject)
-        setModule(model.module)
         setDepartment(model.department)
         setCoordinator(model.coordinator)
         setMinContents(model.minContents)
@@ -299,46 +365,27 @@ export function ModelViewer(props) {
         setCompetencesBasic(model.competences.basic)
         setCompetencesGeneral(model.competences.general)
         setCompetencesSpecific(model.competences.specific)
+        if(props.mode==="copy"){
+            setDegree(emptyModel.degree)
+            setYear(emptyModel.degree)
+            setCode(emptyModel.degree)
+            setModule(emptyModel.module)
+            setSubject(emptyModel.subject)
+        }else{
+            setDegree(model.degree)
+            setYear(model.year)
+            setCode(model.code)
+            setModule(model.module)
+            setSubject(model.subject)
+        }
     }
 
     useEffect( () => {
-        async function loadData(){
-            let degOp = []
-            let depOp = []
-
-            await tokenFetch('newModel', {
-                method: 'put',
-                headers: {"Content-type": "application/json"},
-                body: JSON.stringify({
-                    reqType: "initial",
-                })
-            }).then(res => {
-                for (const resElement of res.degrees) {
-                    degOp.push(generateOptionWithValue(resElement.degreeDisplayName, resElement.degreeID))
-                }
-                for (const resElement of res.departments) {
-                    depOp.push(generateOptionWithValue(resElement.departmentName, resElement.departmentID))
-                }
-                setDegreeOptions(degOp)
-                setDepartmentOptions(depOp)
-                loadModel()
-            })
-        }
-
-        if (props.show) {
-            if(props.mode==="edit"){
-                setEdit(true)
-                loadData().then(r => null)
-            }else {
-                setEdit(false)
-                loadModel().then(r => null)
-            }
-        }
-
+        init();
     }, [props.show])
 
-
     function validateForm(){
+
         let submit=true
 
         if(degree===null || !Number.isInteger(degree.value)){
@@ -369,7 +416,7 @@ export function ModelViewer(props) {
             setInvalidLanguage(false)
         }
 
-        if(code===null || !Number.isInteger(code)){
+        if(code===null || !Number.parseInt(code) || !testCode(code)){
             setInvalidCode(true)
             submit=false
         }else{
@@ -390,7 +437,7 @@ export function ModelViewer(props) {
             setInvalidIntlName(false)
         }
 
-        if(shorthand===null || shorthand===""){
+        if(shorthand===null || shorthand==="" || !testShorthand(shorthand)){
             setInvalidShorthand(true)
             submit=false
         }else{
@@ -404,7 +451,7 @@ export function ModelViewer(props) {
             setInvalidType(false)
         }
 
-        if(ECTS===null || !Number.isInteger(ECTS.value)){
+        if(ECTS===null || !Number.parseFloat(ECTS.value)){
             setInvalidECTS(true)
             submit=false
         }else{
@@ -498,8 +545,7 @@ export function ModelViewer(props) {
         return submit
     }
 
-    const handleSubmit = (event) => {
-
+    const handleSubmit = () => {
         if(validateForm()){
             const newModel = {
                 degree: degree.value,
@@ -528,28 +574,74 @@ export function ModelViewer(props) {
                 }
             }
 
-            /*
-            tokenFetch('newModel', {
-                method: 'put',
-                headers: {"Content-type": "application/json"},
-                body: JSON.stringify({
-                    reqType: "upload",
-                    model: newModel
+            if(props.model===undefined || props.mode==="copy"){
+                tokenFetch('newModel', {
+                    method: 'put',
+                    headers: {"Content-type": "application/json"},
+                    body: JSON.stringify({
+                        reqType: "upload",
+                        model: newModel
+                    })
+                }).then(resp => {
+                    if(resp==="OK"){
+                        props.onHide();
+                        window.location.reload()
+                    }else if (resp==="Code already in use"){
+                        setInvalidCode(true);
+                        setCodeFeedback("Este código ya se ha utilizado")
+                        scrollToTop();
+                    }else{
+                        setInvalidCode(true);
+                        setCodeFeedback("Error desconocido")
+                        scrollToTop();
+                    }
                 })
-            }).then(res => {})
-
-             */
-
-            console.log(newModel);
-            event.preventDefault();
-            event.stopPropagation();
+            }else{
+                tokenFetch('editModel', {
+                    method: 'put',
+                    headers: {"Content-type": "application/json"},
+                    body: JSON.stringify({
+                        model: newModel
+                    })
+                }).then(resp => {
+                    console.log("success");
+                    props.onHide();
+                }, resp => {
+                    console.log("failed")
+                })
+            }
 
         }else{
-            event.preventDefault();
-            event.stopPropagation();
+            scrollToTop();
         }
 
     }
+
+    function handleDelete(c) {
+        tokenFetch('deleteModel', {
+            method: 'put',
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify({
+                model: c
+            })
+        }).then(res => {
+            props.onHide()
+            window.location.reload()
+        }, (res => console.log(res)))
+    }
+
+    const confirmEliminatePopover = (
+        <Popover id="confirmEliminatePopover">
+            <Popover.Header as="h3">Confirmación</Popover.Header>
+            <Popover.Body>
+                Esta acción es irreversible. ¿Seguro que desea eliminar este modelo?
+                <h3> </h3>
+                <Button className={"w-100"} variant={"danger"} onClick={() => handleDelete(code)}>Sí, seguro</Button>
+            </Popover.Body>
+        </Popover>
+    );
+
+
 
     const [yearOptions, setYearOptions] = useState([])
     const [moduleOptions, setModuleOptions] = useState([])
@@ -625,6 +717,7 @@ export function ModelViewer(props) {
             backdrop={"static"}
         >
 
+            <Form>
             <Modal.Header closeButton className={"h-auto"}>
                 <div ref={modalRef}>
                 <Modal.Title id="contained-modal-title-vcenter" className={"h-auto"}>
@@ -633,7 +726,6 @@ export function ModelViewer(props) {
                 </div>
             </Modal.Header>
 
-            <Form noValidate onSubmit={handleSubmit}>
             <Modal.Body>
                 <Form.Label className={invalidDegree ? "red" : ""}>Grado</Form.Label>
                 <Select
@@ -687,9 +779,9 @@ export function ModelViewer(props) {
                     <Form.Group className="w-25 tl pa2" controlId="code">
                         <Form.Label>Código</Form.Label>
                         <Form.Control type="text" onChange={event => setCode(event.target.value)} required isInvalid={invalidCode}
-                                      value={code} disabled={!edit} />
+                                      value={code} disabled={!codeIsEditable} />
                         <Form.Control.Feedback type="invalid">
-                            El código debe ser numérico
+                            {codeFeedback}
                         </Form.Control.Feedback>
                     </Form.Group>
                 </div>
@@ -802,8 +894,8 @@ export function ModelViewer(props) {
                 <Accordion className={"mt4 mb4 form-control"} defaultActiveKey="0">
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>Competencias</Accordion.Header>
-                        <Accordion.Body className={"bg-light-green"}>
-                            <div className={"bg-light-green"}>
+                        <Accordion.Body className={"bg-light-gray"}>
+                            <div className={"bg-light-gray"}>
                                 <Form.Label className={invalidCompetencesBasic ? "red" : ""}>Básicas</Form.Label>
                                 <TextEditor onChange={setCompetencesBasic} value={competencesBasic} disabled={!edit} />
 
@@ -835,7 +927,23 @@ export function ModelViewer(props) {
 
             </Modal.Body>
             <Modal.Footer>
-                {buttonArray}
+
+                {props.mode === "create" ?
+                    <></> :
+                    <OverlayTrigger rootClose={true} trigger="click" placement="top" overlay={confirmEliminatePopover}>
+                        <Button variant="danger" className={"mr-auto"} key={"delete"}>Eliminar</Button>
+                    </OverlayTrigger>
+                }
+
+
+
+                {edit ?
+                    <Button variant="success" key={"confirm"} onClick={() => handleSubmit()}>Confirmar</Button> :
+                    <Button variant="success" key={"confirm"} onClick={() => toggleEdit()}>Editar</Button>
+
+                }
+
+                <Button variant={"primary"} key={"cancel"} onClick={props.onHide}>{edit ? "Cerrar" :"Cancelar"}</Button>
             </Modal.Footer>
             </Form>
 
