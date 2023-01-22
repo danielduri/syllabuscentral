@@ -15,8 +15,6 @@ import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./modelV
 //TODO handle backend responses
 //TODO support for additional fields
 
-//TODO dept/coord deleted on edit
-
 export function ModelViewer(props) {
 
     //region state declarations
