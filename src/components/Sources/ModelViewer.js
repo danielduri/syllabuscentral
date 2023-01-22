@@ -251,7 +251,7 @@ export function ModelViewer(props) {
                 }
 
                 if(res.department){
-                    readyModel.department = generateOptionWithValue(model.department, res.department.departmentID)
+                    readyModel.department = generateOptionWithValue(model.department, res.department)
                     populateDepartmentUsers(res)
                 }else{
                     readyModel.department = emptyModel.department
