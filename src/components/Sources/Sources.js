@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import Unauthorized from "../Common/Unauthorized";
 import {Button, Form, Table} from "react-bootstrap";
 import {ModelViewer} from "./ModelViewer";
 import {FileUpload} from "./FileUpload";
@@ -179,7 +177,6 @@ function Sources (){
 
      */
 
-    const user = useSelector((state) => state.user)
     const [searchText, setSearchText] = useState("");
     const [ newModel, setNewModel ] = useState(false);
     const [ view, setView ] = useState(false);
