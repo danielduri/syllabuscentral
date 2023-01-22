@@ -7,38 +7,20 @@ import CreatableSelect from "react-select/creatable";
 import TextEditor, {arrayRegenerate, arrayStringify} from "../Common/TextEditor";
 import TextareaAutosize from "react-textarea-autosize";
 import {tokenFetch} from "../Common/functions/tokenFetch";
+import {useSelector} from "react-redux";
+import {emptyModel, generateOption, generateOptionWithValue, testCode, testShorthand} from "./modelViewerFunctions";
+import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./modelViewerOptions";
 
 //TODO deploy to production
 //TODO handle backend responses
 //TODO support for additional fields
 
+//TODO dept/coord deleted on edit
+
 export function ModelViewer(props) {
 
-    const init = () => {
-        if (props.show) {
-            if(props.mode==="create"){
-                setEdit(true)
-                setCodeIsEditable(true)
-                loadData(true).then(r => null)
-            }else if(props.mode==="edit"){
-                setEdit(true)
-                loadData(true).then(r => null)
-            }else if(props.mode==="copy"){
-                setEdit(true)
-                loadData(true).then(() => {})
-                setCodeIsEditable(true)
-            } else {
-                setEdit(false)
-                loadModel(false).then(r => null)
-            }
-        }
-    }
-
+    //region state declarations
     const modalRef = useRef();
-
-    const scrollToTop = () => {
-        modalRef.current?.scrollIntoView({ block:'nearest', behavior:'smooth' });
-    }
 
     const [edit, setEdit]=useState(false)
 
@@ -54,13 +36,6 @@ export function ModelViewer(props) {
         Buttons: save/cancel
      */
 
-    const generateOption = (value) => {
-        return {label: value, value: value}
-    }
-    const generateOptionWithValue = (label, value) => {
-        return {label: label, value: value}
-    }
-
     const [degree, setDegree] = useState(generateOption(""));
     const [invalidDegree, setInvalidDegree] = useState(false);
 
@@ -68,40 +43,15 @@ export function ModelViewer(props) {
     const [invalidYears, setInvalidYears] = useState(false);
 
     const [period, setPeriod] = useState(generateOption(""));
-    const periodOptions = [
-        { label: "1", value: 1},
-        { label: "2", value: 2},
-        { label: "Ninguno", value: 0}
-    ]
     const [invalidPeriod, setInvalidPeriod] = useState(false);
 
     const [language, setLanguage] = useState({label: 'Español', value: 'Español'});
-    const languageOptions = [
-        { label: "Español", value: "Español"},
-        { label: "Inglés", value: "Inglés"}
-    ]
     const [invalidLanguage, setInvalidLanguage] = useState(false);
 
     const [code, setCode] = useState("");
     const [invalidCode, setInvalidCode] = useState(false);
     const [codeIsEditable, setCodeIsEditable] = useState(false);
     const [codeFeedback, setCodeFeedback] = useState("El código debe ser numérico");
-
-    const testCode = (c) => {
-        if(c!==""){
-            return !/\D/.test(code);
-        }else{
-            return true
-        }
-    }
-
-    useEffect(()=>{
-        if (testCode(code)){
-            setInvalidCode(false)
-        }else{
-            setInvalidCode(true)
-        }
-    },[code])
 
     const [courseName, setCourseName] = useState("");
     const [invalidCourseName, setInvalidCourseName] = useState(false);
@@ -112,43 +62,13 @@ export function ModelViewer(props) {
     const [shorthand, setShorthand] = useState("");
     const [invalidShorthand, setInvalidShorthand] = useState(false);
 
-    const testShorthand = (sh) => {
-        if(shorthand!==""){
-            let regex = /^[\w-_.]*$/;
-            return !(sh.length < 2 || sh.length > 5 || !regex.test(sh));
-        }else{
-            return true
-        }
-    }
-
-    useEffect(()=>{
-        if (testShorthand(shorthand)){
-            setInvalidShorthand(false)
-        }else {
-            setInvalidShorthand(true)
-        }
-    },[shorthand])
-
     const [subject, setSubject] = useState("");
     const [invalidSubject, setInvalidSubject] = useState(false);
 
     const [type, setType] = useState("");
-    const typeOptions = [
-        generateOption("Formación Básica"),
-        generateOption("Optativa"),
-        generateOption("Obligatoria"),
-        generateOption("Trabajo de fin de grado")
-    ]
     const [invalidType, setInvalidType] = useState(false);
 
     const [ECTS, setECTS] = useState("");
-    const ECTSoptions = [
-        generateOption(3),
-        generateOption(4.5),
-        generateOption(6),
-        generateOption(9),
-        generateOption(12)
-    ]
     const [invalidECTS, setInvalidECTS] = useState(false);
 
     const [module, setModule] = useState("");
@@ -184,11 +104,78 @@ export function ModelViewer(props) {
     const [literature, setLiterature] = useState("");
     const [invalidLiterature, setInvalidLiterature] = useState(false);
 
+    const [enableEditButton, setEnableEditButton] = useState(false);
+    const [enableDeleteButton, setEnableDeleteButton] = useState(false);
+
+    const [departmentOptions, setDepartmentOptions] = useState([])
+    const [degreeOptions, setDegreeOptions] = useState([])
+
+    const [yearOptions, setYearOptions] = useState([])
+    const [moduleOptions, setModuleOptions] = useState([])
+    const [subjectOptions, setSubjectOptions] = useState([])
+    const [coordinatorOptions, setCoordinatorOptions] = useState([])
+    //endregion
+
+    //region useEffect hooks
+    useEffect( () => {
+        init();
+    }, [props.show])
+
+    useEffect(()=>{
+        if (testCode(code)){
+            setInvalidCode(false)
+        }else{
+            setInvalidCode(true)
+        }
+    },[code])
+
+    useEffect(()=>{
+        if (testShorthand(shorthand)){
+            setInvalidShorthand(false)
+        }else {
+            setInvalidShorthand(true)
+        }
+    },[shorthand])
+    //endregion
+
+    const user = useSelector ((state) => state.user)
+
+    const scrollToTop = () => {
+        modalRef.current?.scrollIntoView({ block:'nearest', behavior:'smooth' });
+    }
+
+    const init = () => {
+        if (props.show) {
+            if(props.mode==="create"){
+                setEdit(true)
+                setCodeIsEditable(true)
+                loadData(true).then(r => null)
+            }else if(props.mode==="edit"){
+                setEdit(true)
+                loadData(true).then(r => null)
+            }else if(props.mode==="copy" || props.mode==="validate"){
+                setEdit(true)
+                loadData(true).then(() => {})
+                setCodeIsEditable(true)
+            } else {
+                setEdit(false)
+                loadModel(false).then(r => null)
+            }
+        }
+    }
+
+    function toggleEdit() {
+        scrollToTop();
+        loadData(true).then(r => {
+            setEdit(!edit);
+        })
+    }
+
     async function loadData(editing){
         let degOp = []
         let depOp = []
 
-        await tokenFetch('newModel', {
+        await tokenFetch('modelViewer', {
             method: 'put',
             headers: {"Content-type": "application/json"},
             body: JSON.stringify({
@@ -206,44 +193,6 @@ export function ModelViewer(props) {
             loadModel(editing)
         })
     }
-
-    function toggleEdit() {
-        scrollToTop();
-        loadData(true).then(r => {
-            setEdit(!edit);
-        })
-    }
-
-    const emptyModel = {
-        degree: "",
-        year: "",
-        period: "",
-        language: "",
-        code: "",
-        name: "",
-        intlName: "",
-        shorthand: "",
-        type: "",
-        ECTS: "",
-        subject: "",
-        module: "",
-        department: "",
-        coordinator: "",
-        minContents: "",
-        program: "",
-        results: "",
-        evaluation: "",
-        literature: "",
-        competences: {
-            basic: "",
-            general: "",
-            specific: ""
-        }
-    }
-
-    const [departmentOptions, setDepartmentOptions] = useState([])
-    const [degreeOptions, setDegreeOptions] = useState([])
-
 
     async function prepareModel(model, editing) {
         let readyModel = JSON.parse(JSON.stringify(model))
@@ -265,6 +214,7 @@ export function ModelViewer(props) {
         readyModel.program = arrayStringify(model.program)
         readyModel.results = arrayStringify(model.results)
         readyModel.literature = arrayStringify(model.literature)
+
         const comp = JSON.parse(model.competences)
         readyModel.competences = {
             basic: arrayStringify(comp.basic),
@@ -282,7 +232,7 @@ export function ModelViewer(props) {
             readyModel.subject=generateOption(model.subject)
             readyModel.coordinator=generateOption(model.coordinator)
         }else{
-            await tokenFetch('newModel', {
+            await tokenFetch('modelViewer', {
                 method: 'put',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
@@ -309,6 +259,16 @@ export function ModelViewer(props) {
                     readyModel.department = emptyModel.department
                 }
 
+                if(props.mode==="validate"){
+                    readyModel.department = emptyModel.department
+                }
+
+                if(res.coordinator){
+                    readyModel.coordinator = generateOptionWithValue(model.coordinator, res.coordinator.userID)
+                }else{
+                    readyModel.coordinator = emptyModel.coordinator
+                }
+
                 if(res.module){
                     readyModel.module = generateOptionWithValue(model.module, res.module.moduleID)
                 }else{
@@ -319,12 +279,6 @@ export function ModelViewer(props) {
                     readyModel.subject = generateOptionWithValue(model.subject, res.subject.subjectID)
                 }else{
                     readyModel.subject = generateOption(model.subject)
-                }
-
-                if(res.coordinator){
-                    readyModel.coordinator = generateOptionWithValue(model.coordinator, res.coordinator.userID)
-                }else{
-                    readyModel.coordinator = emptyModel.coordinator
                 }
 
             })
@@ -371,11 +325,11 @@ export function ModelViewer(props) {
             setModule(model.module)
             setSubject(model.subject)
         }
+        if(user.userInfo.userType>=1 || model.coordinator.label===user.userInfo.userName){
+            setEnableEditButton(true);
+            setEnableDeleteButton(true);
+        }
     }
-
-    useEffect( () => {
-        init();
-    }, [props.show])
 
     function validateForm(){
 
@@ -567,27 +521,15 @@ export function ModelViewer(props) {
                 }
             }
 
-            if(props.model===undefined || props.mode==="copy"){
+            if(props.model===undefined || props.mode==="copy" || props.mode==="validate"){
                 tokenFetch('newModel', {
                     method: 'put',
                     headers: {"Content-type": "application/json"},
                     body: JSON.stringify({
-                        reqType: "upload",
                         model: newModel
                     })
                 }).then(resp => {
-                    if(resp==="OK"){
-                        props.onHide();
-                        window.location.reload()
-                    }else if (resp==="Code already in use"){
-                        setInvalidCode(true);
-                        setCodeFeedback("Este código ya se ha utilizado")
-                        scrollToTop();
-                    }else{
-                        setInvalidCode(true);
-                        setCodeFeedback("Error desconocido")
-                        scrollToTop();
-                    }
+                    handleResponse(resp)
                 })
             }else{
                 tokenFetch('editModel', {
@@ -597,10 +539,7 @@ export function ModelViewer(props) {
                         model: newModel
                     })
                 }).then(resp => {
-                    console.log("success");
-                    props.onHide();
-                }, resp => {
-                    console.log("failed")
+                    handleResponse(resp)
                 })
             }
 
@@ -623,22 +562,48 @@ export function ModelViewer(props) {
         }, (res => console.log(res)))
     }
 
-    const confirmEliminatePopover = (
-        <Popover id="confirmEliminatePopover">
-            <Popover.Header as="h3">Confirmación</Popover.Header>
-            <Popover.Body>
-                Esta acción es irreversible. ¿Seguro que desea eliminar este modelo?
-                <h3> </h3>
-                <Button className={"w-100"} variant={"danger"} onClick={() => handleDelete(code)}>Sí, seguro</Button>
-            </Popover.Body>
-        </Popover>
-    );
+    function handleDegreeChange(e) {
+        setDegree(e)
+        setYear(null)
+        setModule(null)
+        setSubject(null)
+        tokenFetch('modelViewer', {
+            method: 'put',
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify({
+                reqType: "degree",
+                degree: e.value
+            })
+        }).then(res => {
+            populateDegreeOptions(res)
+        })
+    }
 
+    function handleDepartmentChange(e) {
+        setDepartment(e)
+        setCoordinator(null)
+        tokenFetch('modelViewer', {
+            method: 'put',
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify({
+                reqType: "department",
+                department: e.value
+            })
+        }).then(res => {
+            populateDepartmentUsers(res)
+        })
+    }
 
-
-    const [yearOptions, setYearOptions] = useState([])
-    const [moduleOptions, setModuleOptions] = useState([])
-    const [subjectOptions, setSubjectOptions] = useState([])
+    function handleResponse(resp){
+        if(resp==="OK"){
+            props.onHide();
+            window.location.reload()
+        }else{
+            setInvalidCode(true);
+            setCodeFeedback(`Error: ${resp}`)
+            scrollToTop();
+        }
+    }
 
     function populateDegreeOptions(json){
         let yrOp=[]
@@ -648,6 +613,7 @@ export function ModelViewer(props) {
         for (let i = 1; i <= json.duration; i++) {
             yrOp.push(generateOptionWithValue(`${i}º`, i))
         }
+        yrOp.push(generateOptionWithValue(`Optativas`, 0))
         for (const resElement of json.subjects) {
             subOp.push(generateOptionWithValue(resElement.subjectName, resElement.subjectID))
         }
@@ -667,38 +633,17 @@ export function ModelViewer(props) {
         setCoordinatorOptions(coordOp)
     }
 
-    function handleDegreeChange(e) {
-        setDegree(e)
-        setYear(null)
-        setModule(null)
-        setSubject(null)
-        tokenFetch('newModel', {
-            method: 'put',
-            headers: {"Content-type": "application/json"},
-            body: JSON.stringify({
-                reqType: "degree",
-                degree: e.value
-            })
-        }).then(res => {
-            populateDegreeOptions(res)
-        })
-    }
-
-    const [coordinatorOptions, setCoordinatorOptions] = useState([])
-    function handleDepartmentChange(e) {
-        setDepartment(e)
-        setCoordinator(null)
-        tokenFetch('newModel', {
-            method: 'put',
-            headers: {"Content-type": "application/json"},
-            body: JSON.stringify({
-                reqType: "department",
-                department: e.value
-            })
-        }).then(res => {
-            populateDepartmentUsers(res)
-        })
-    }
+    //region return
+    const confirmEliminatePopover = (
+        <Popover id="confirmEliminatePopover">
+            <Popover.Header as="h3">Confirmación</Popover.Header>
+            <Popover.Body>
+                Esta acción es irreversible. ¿Seguro que desea eliminar este modelo?
+                <h3> </h3>
+                <Button className={"w-100"} variant={"danger"} onClick={() => handleDelete(code)}>Sí, seguro</Button>
+            </Popover.Body>
+        </Popover>
+    );
 
     return (
         <Modal
@@ -921,10 +866,10 @@ export function ModelViewer(props) {
             </Modal.Body>
             <Modal.Footer>
 
-                {props.mode === "create" ?
+                {props.mode === "create" || props.mode === "copy" ?
                     <></> :
                     <OverlayTrigger rootClose={true} trigger="click" placement="top" overlay={confirmEliminatePopover}>
-                        <Button variant="danger" className={"mr-auto"} key={"delete"}>Eliminar</Button>
+                        <Button variant="danger" disabled={!enableDeleteButton} className={"mr-auto"} key={"delete"}>Eliminar</Button>
                     </OverlayTrigger>
                 }
 
@@ -932,7 +877,7 @@ export function ModelViewer(props) {
 
                 {edit ?
                     <Button variant="success" key={"confirm"} onClick={() => handleSubmit()}>Confirmar</Button> :
-                    <Button variant="success" key={"confirm"} onClick={() => toggleEdit()}>Editar</Button>
+                    <Button variant="success" key={"confirm"} disabled={!enableEditButton} onClick={() => toggleEdit()}>Editar</Button>
 
                 }
 
@@ -942,4 +887,5 @@ export function ModelViewer(props) {
 
         </Modal>
     );
+    //endregion
 }

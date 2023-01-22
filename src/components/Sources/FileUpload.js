@@ -1,46 +1,53 @@
-import {Button, Form, Modal} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import './Modal.css'
 import {useEffect, useState} from "react";
 import {tokenFetch} from "../Common/functions/tokenFetch";
-import {useDispatch, useSelector} from "react-redux";
-import {changeEmail} from "../../features/user/userSlice";
+
 
 export function FileUpload(props)
  {
-    const [newEmail, setNewEmail] = useState("");
-    const [validated, setValidated] = useState(false);
-    const [wrongEmail, setWrongEmail] = useState("");
-    const user = useSelector((state) => state.user);
-    const dispatch = useDispatch();
 
-    useEffect(() => {
-        if((wrongEmail==="") && (validated)){
-            setValidated(false);
-            props.onHide()
-        }
-    }, [wrongEmail, validated, props])
+     const [selectedFile, setSelectedFile] = useState(null);
+     const [isFilePicked, setIsFilePicked] = useState(false);
+     const [feedback, setFeedback] = useState("");
 
+     useEffect(() => {
+         setFeedback("")
+         setSelectedFile(null)
+         setIsFilePicked(false)
+     }, [props.show])
 
-     const [image, setImage] = useState({ preview: '', data: '' })
-     const [status, setStatus] = useState('')
-     const handleSubmit = async (e) => {
-         e.preventDefault()
-         let formData = new FormData()
-         formData.append('file', image.data)
-         const response = await fetch('http://localhost:5000/image', {
-             method: 'POST',
-             body: formData,
-         })
-         if (response) setStatus(response.statusText)
-     }
+     const handleSubmission = () => {
+         const formData = new FormData();
 
-     const handleFileChange = (e) => {
-         const img = {
-             preview: URL.createObjectURL(e.target.files[0]),
-             data: e.target.files[0],
-         }
-         setImage(img)
-     }
+         formData.append('file', selectedFile);
+
+         tokenFetch(
+             'uploadDoc',
+             {
+                 method: 'POST',
+                 body: formData,
+             }
+         )
+             .then((result) => {
+                 if(result.toString().substring(0, 7)!=="Invalid"){
+                     props.setModel(result);
+                     props.onHide();
+                     props.openViewer(true);
+                 }else{
+                     setFeedback(result)
+                 }
+
+             })
+             .catch((error) => {
+                 console.error('Error:', error);
+             });
+     };
+
+     const changeHandler = (event) => {
+         setSelectedFile(event.target.files[0]);
+         setIsFilePicked(true);
+     };
 
     return (
         <Modal
@@ -56,21 +63,29 @@ export function FileUpload(props)
                 </Modal.Title>
             </Modal.Header>
 
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-
             <Modal.Body>
-                {image.preview && <img src={image.preview} width='100' height='100' />}
-                <input type='file' name='file' onChange={handleFileChange}></input>
-
-                {status && <h4>{status}</h4>}
+                <h3 className={"red"}>{feedback}</h3>
+                <input type="file" name="file" onChange={changeHandler} />
+                <h3> </h3>
+                {isFilePicked ? (
+                    <div>
+                        <p>Nombre de fichero: {selectedFile.name}</p>
+                        <p>Tipo de fichero: {selectedFile.type}</p>
+                        <p>Tamaño en bytes: {selectedFile.size}</p>
+                        <p>
+                            Fecha de modificación:{' '}
+                            {selectedFile.lastModifiedDate.toLocaleDateString()}
+                        </p>
+                    </div>
+                ) : (
+                    <p>Select a file to show details</p>
+                )}
             </Modal.Body>
 
             <Modal.Footer>
-                <Button className={'mv3'} variant={'success'} type='submit'>Subir</Button>
+                <Button className={'mv3'} variant={'success'} onClick={handleSubmission}>Subir</Button>
                 <Button onClick={props.onHide}>Cancelar</Button>
             </Modal.Footer>
-
-            </Form>
 
         </Modal>
     );

@@ -7,7 +7,7 @@ import {FileUpload} from "./FileUpload";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 
 function getModel(courseID) {
-    return tokenFetch(`getModel?courseID=${courseID}`, {
+    return tokenFetch(`getModel?courseid=${courseID}`, {
         method: 'get',
         headers: {"Content-type": "application/json"},
     }).then(res => {
@@ -185,6 +185,7 @@ function Sources (){
     const [ view, setView ] = useState(false);
     const [ copy, setCopy ] = useState(false);
     const [ upload, setUpload ] = useState(false);
+    const [ validate, setValidate ] = useState(false);
     const [ model, setModel ] = useState(undefined);
 
     const [ list, setList ] = useState([]);
@@ -208,8 +209,8 @@ function Sources (){
                     }else{
                         itemList.push(<tr key={item.degree}><td colSpan={100}><h4 className={"pv2"}>{item.degree}</h4></td></tr>)
                     }
-                    itemList.push( <tr key={item.courseID}>
-                        <td>{item.courseID}</td>
+                    itemList.push( <tr key={item.courseid}>
+                        <td>{item.courseid}</td>
                         <td>{item.shorthand}</td>
                         <td>{item.name}</td>
                         <td>{item.ECTS}</td>
@@ -218,14 +219,14 @@ function Sources (){
                         <td>{item.type}</td>
                         <td>
                             <div>
-                                <Button variant={"success"} key={item.courseID} className={"ma1"} onClick={() => {
-                                    getModel(item.courseID).then(response => {
+                                <Button variant={"success"} key={item.courseid} className={"ma1"} onClick={() => {
+                                    getModel(item.courseid).then(response => {
                                         setModel(response);
                                         setView(true);
                                     })
                                 }}>Ver</Button>
-                                <Button variant={"success"} key={item.courseID + "copy"} className={"ma1"} onClick={() => {
-                                    getModel(item.courseID).then(response => {
+                                <Button variant={"success"} key={item.courseid + "copy"} className={"ma1"} onClick={() => {
+                                    getModel(item.courseid).then(response => {
                                         setModel(response);
                                         setCopy(true);
                                     })
@@ -246,60 +247,59 @@ function Sources (){
     }, [searchText])
 
 
-    if(user.userInfo.userType >= 0){
-        return (
-            <div className={"center"}>
-                <Form className="d-flex w-50 center">
-                    <Form.Control
-                        type="search"
-                        placeholder="Buscar..."
-                        className="me-2"
-                        aria-label="Search"
-                        onChange={event => setSearchText(event.target.value)}
-                        value={searchText}
-                    />
-                    {//searchText==="" ? <></> : <Button variant="outline-danger" onClick={() => setSearchText("")}>Borrar</Button>
-                         }
-                </Form>
 
-                <div className={"center tc pa3"}>
-                    <Button variant={"success"} className={"w-20 ma1"} onClick={() => setNewModel(true)}>
-                        Nuevo modelo</Button>
-                    <ModelViewer show={newModel} mode={"create"} onHide={() => setNewModel(false)}></ModelViewer>
+    return (
+        <div className={"center"}>
+            <Form className="d-flex w-50 center">
+                <Form.Control
+                    type="search"
+                    placeholder="Buscar..."
+                    className="me-2"
+                    aria-label="Search"
+                    onChange={event => setSearchText(event.target.value)}
+                    value={searchText}
+                />
+                {//searchText==="" ? <></> : <Button variant="outline-danger" onClick={() => setSearchText("")}>Borrar</Button>
+                }
+            </Form>
 
-                    <ModelViewer show={view} mode={"view"} model={model} onHide={() => setView(false)}></ModelViewer>
+            <div className={"center tc pa3"}>
+                <Button variant={"success"} className={"w-20 ma1"} onClick={() => setNewModel(true)}>
+                    Nuevo modelo</Button>
+                <ModelViewer show={newModel} mode={"create"} onHide={() => setNewModel(false)}></ModelViewer>
 
-                    <ModelViewer show={copy} mode={"copy"} model={model} onHide={() => setCopy(false)}></ModelViewer>
+                <ModelViewer show={view} mode={"view"} model={model} onHide={() => setView(false)}></ModelViewer>
 
-                    <Button variant={"success"} className={"w-20 ma1"} onClick={() => setUpload(true)}>
-                        Subir modelo</Button>
-                    <FileUpload show={upload} onHide={() => setUpload(false)}></FileUpload>
+                <ModelViewer show={copy} mode={"copy"} model={model} onHide={() => setCopy(false)}></ModelViewer>
 
-                </div>
+                <ModelViewer show={validate} mode={"validate"} model={model} onHide={() => setValidate(false)}></ModelViewer>
 
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Abrev.</th>
-                        <th>Asignatura</th>
-                        <th>ECTS</th>
-                        <th>Coordinador</th>
-                        <th>Departamento</th>
-                        <th>Tipo</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {list.length > 0 ? list : <tr><td colSpan={100}><p className={"fw6 pv4"}>No hay resultados. Busca por nombre, abreviatura o código completo. </p></td></tr>}
-                    </tbody>
-                </Table>
+                <Button variant={"success"} className={"w-20 ma1"} onClick={() => setUpload(true)}>
+                    Subir modelo</Button>
+                <FileUpload show={upload} onHide={() => setUpload(false)} setModel={setModel} openViewer={setValidate}></FileUpload>
 
             </div>
-        )
-    }else{
-        return (<Unauthorized/>)
-    }
+
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Abrev.</th>
+                    <th>Asignatura</th>
+                    <th>ECTS</th>
+                    <th>Coordinador</th>
+                    <th>Departamento</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {list.length > 0 ? list : <tr><td colSpan={100}><p className={"fw6 pv4"}>No hay resultados. Busca por nombre, abreviatura o código completo. </p></td></tr>}
+                </tbody>
+            </Table>
+
+        </div>
+    )
 
 }
 
