@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 
 
-export function FileUpload(props)
+export function ModelUpload(props)
  {
 
      const [selectedFile, setSelectedFile] = useState(null);
@@ -47,6 +47,7 @@ export function FileUpload(props)
      const changeHandler = (event) => {
          setSelectedFile(event.target.files[0]);
          setIsFilePicked(true);
+         setFeedback("")
      };
 
     return (
@@ -65,7 +66,7 @@ export function FileUpload(props)
 
             <Modal.Body>
                 <h3 className={"red"}>{feedback}</h3>
-                <input type="file" name="file" onChange={changeHandler} />
+                <Button variant={"success"}><input type="file" name="file" onChange={changeHandler} /></Button>
                 <h3> </h3>
                 {isFilePicked ? (
                     <div>
@@ -78,7 +79,7 @@ export function FileUpload(props)
                         </p>
                     </div>
                 ) : (
-                    <p>Select a file to show details</p>
+                    <p></p>
                 )}
             </Modal.Body>
 

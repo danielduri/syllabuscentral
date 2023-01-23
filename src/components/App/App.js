@@ -10,7 +10,7 @@ import Test from "../Test/test";
 import {useDispatch, useSelector} from "react-redux";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 import {updateUserInfo} from "../../features/user/userSlice";
-import Sources from "../Sources/Sources";
+import Models from "../Models/Models";
 
 function App(){
 
@@ -46,7 +46,7 @@ function App(){
                               <Route path="/dash" element={<Dash />} />
                               <Route path="/test" element={<Test />} />
                               <Route path="/preferences" element={<Preferences/>} />
-                              <Route path="/sources" element={<Sources/>} />
+                              <Route path="/models" element={<Models/>} />
                           </Routes>
                   </div>
               </ErrorBoundary>

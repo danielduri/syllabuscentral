@@ -142,8 +142,34 @@ export function ModelViewer(props) {
         modalRef.current?.scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
 
+    function clearFeedback() {
+        setInvalidDegree(false)
+        setInvalidYears(false)
+        setInvalidPeriod(false)
+        setInvalidLanguage(false)
+        setInvalidCode(false)
+        setInvalidCourseName(false)
+        setInvalidIntlName(false)
+        setInvalidShorthand(false)
+        setInvalidSubject(false)
+        setInvalidType(false)
+        setInvalidECTS(false)
+        setInvalidModule(false)
+        setInvalidDepartment(false)
+        setInvalidCoordinator(false)
+        setInvalidMinContents(false)
+        setInvalidProgram(false)
+        setInvalidCompetencesBasic(false)
+        setInvalidCompetencesGeneral(false)
+        setInvalidCompetencesSpecific(false)
+        setInvalidResults(false)
+        setInvalidEvaluation(false)
+        setInvalidLiterature(false)
+    }
+
     const init = () => {
         if (props.show) {
+            clearFeedback();
             if(props.mode==="create"){
                 setEdit(true)
                 setCodeIsEditable(true)
