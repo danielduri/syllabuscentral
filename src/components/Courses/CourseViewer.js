@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Accordion, Button, Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
-import './Modal.css'
+import '../Modal.css'
 import React, {useEffect, useRef, useState} from "react";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -8,14 +8,15 @@ import TextEditor, {arrayRegenerate, arrayStringify} from "../Common/TextEditor"
 import TextareaAutosize from "react-textarea-autosize";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 import {useSelector} from "react-redux";
-import {emptyModel, generateOption, generateOptionWithValue, testCode, testShorthand} from "./modelViewerFunctions";
-import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./modelViewerOptions";
+import {emptyModel} from "./courseViewerFunctions";
+import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./courseViewerOptions";
+import {generateOption, generateOptionWithValue, validateCode, validateShorthand} from "../Common/functions/misc";
 
 //TODO deploy to production
 //TODO handle backend responses
 //TODO support for additional fields
 
-export function ModelViewer(props) {
+export function CourseViewer(props) {
 
     //region state declarations
     const modalRef = useRef();
@@ -120,7 +121,7 @@ export function ModelViewer(props) {
     }, [props.show])
 
     useEffect(()=>{
-        if (testCode(code)){
+        if (validateCode(code)){
             setInvalidCode(false)
         }else{
             setInvalidCode(true)
@@ -128,7 +129,7 @@ export function ModelViewer(props) {
     },[code])
 
     useEffect(()=>{
-        if (testShorthand(shorthand)){
+        if (validateShorthand(shorthand)){
             setInvalidShorthand(false)
         }else {
             setInvalidShorthand(true)
@@ -227,7 +228,9 @@ export function ModelViewer(props) {
         } else {
             readyModel.period = generateOptionWithValue("Ninguno", 0)
         }
-        if (Number.parseInt(model.year) > 0) {
+        if (Number.parseInt(model.year) === 0) {
+            readyModel.year = generateOptionWithValue(`Optativas`, 0)
+        } else if (Number.parseInt(model.year) > 0) {
             readyModel.year = generateOptionWithValue(`${model.year}º`, model.year)
         } else {
             readyModel.year = null
@@ -280,10 +283,6 @@ export function ModelViewer(props) {
                     readyModel.department = generateOptionWithValue(model.department, res.department)
                     populateDepartmentUsers(res)
                 }else{
-                    readyModel.department = emptyModel.department
-                }
-
-                if(props.mode==="validate"){
                     readyModel.department = emptyModel.department
                 }
 
@@ -387,7 +386,7 @@ export function ModelViewer(props) {
             setInvalidLanguage(false)
         }
 
-        if(code===null || !Number.parseInt(code) || !testCode(code)){
+        if(code===null || !Number.parseInt(code) || !validateCode(code)){
             setInvalidCode(true)
             submit=false
         }else{
@@ -408,7 +407,7 @@ export function ModelViewer(props) {
             setInvalidIntlName(false)
         }
 
-        if(shorthand===null || shorthand==="" || !testShorthand(shorthand)){
+        if(shorthand===null || shorthand==="" || !validateShorthand(shorthand)){
             setInvalidShorthand(true)
             submit=false
         }else{

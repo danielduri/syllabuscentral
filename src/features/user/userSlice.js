@@ -27,7 +27,7 @@ export const userSlice = createSlice({
             state.error = null
         },
         updateUserInfo: (state, action) => {
-            state.userInfo = action.payload.userInfo
+            state.userInfo = action.payload
         },
         wrongPassword: (state) =>  {
             state.auth = false

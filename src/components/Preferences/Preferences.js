@@ -5,7 +5,7 @@ import {ChangeName} from "./ChangeName";
 import {ChangePassword} from "./ChangePassword";
 import {useSelector} from "react-redux";
 
-const userType = (userType) => {
+export const displayUserType = (userType) => {
     switch (userType){
         case 0:
             return "Usuario profesor";
@@ -69,7 +69,7 @@ function Preferences(){
 
                             <div className="mv3">
                                 <label className="db fw6 lh-copy f6" htmlFor="name">Tipo de usuario</label>
-                                <h3>{userType(user.userInfo.userType)}</h3>
+                                <h3>{displayUserType(user.userInfo.userType)}</h3>
                             </div>
 
                             <div className="mv3">

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Table} from "react-bootstrap";
-import {ModelViewer} from "./ModelViewer";
-import {ModelUpload} from "./ModelUpload";
+import {CourseViewer} from "./CourseViewer";
+import {CourseUpload} from "./CourseUpload";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 
 function getModel(courseID) {
@@ -13,7 +13,7 @@ function getModel(courseID) {
     })
 }
 
-function Models (){
+function Courses (){
 
     const [searchText, setSearchText] = useState("");
     const [ newModel, setNewModel ] = useState(false);
@@ -101,17 +101,17 @@ function Models (){
             <div className={"center tc pa3"}>
                 <Button variant={"success"} className={"w-20 ma1"} onClick={() => setNewModel(true)}>
                     Nuevo modelo</Button>
-                <ModelViewer show={newModel} mode={"create"} onHide={() => setNewModel(false)}></ModelViewer>
+                <CourseViewer show={newModel} mode={"create"} onHide={() => setNewModel(false)}></CourseViewer>
 
-                <ModelViewer show={view} mode={"view"} model={model} onHide={() => setView(false)}></ModelViewer>
+                <CourseViewer show={view} mode={"view"} model={model} onHide={() => setView(false)}></CourseViewer>
 
-                <ModelViewer show={copy} mode={"copy"} model={model} onHide={() => setCopy(false)}></ModelViewer>
+                <CourseViewer show={copy} mode={"copy"} model={model} onHide={() => setCopy(false)}></CourseViewer>
 
-                <ModelViewer show={validate} mode={"validate"} model={model} onHide={() => setValidate(false)}></ModelViewer>
+                <CourseViewer show={validate} mode={"validate"} model={model} onHide={() => setValidate(false)}></CourseViewer>
 
                 <Button variant={"success"} className={"w-20 ma1"} onClick={() => setUpload(true)}>
                     Subir modelo</Button>
-                <ModelUpload show={upload} onHide={() => setUpload(false)} setModel={setModel} openViewer={setValidate}></ModelUpload>
+                <CourseUpload show={upload} onHide={() => setUpload(false)} setModel={setModel} openViewer={setValidate}></CourseUpload>
 
             </div>
 
@@ -138,4 +138,4 @@ function Models (){
 
 }
 
-export default Models;
+export default Courses;

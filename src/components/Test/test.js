@@ -7,8 +7,6 @@ import {Accordion, Button} from "react-bootstrap";
  */
 
 
-
-
 function FormExample() {
     return(
         <></>
