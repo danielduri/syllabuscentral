@@ -2,7 +2,7 @@ export const emptyModel = {
     degree: "",
     year: "",
     period: "",
-    language: "",
+    language: {label: "", value: ""},
     code: "",
     name: "",
     intlName: "",

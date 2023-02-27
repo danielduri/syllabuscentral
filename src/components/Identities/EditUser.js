@@ -358,7 +358,8 @@ export function EditUser(props) {
                 }
                 button = <Button variant={buttonVariant} onClick={handleUserPromote}>{buttonText}</Button>
                 if(props.user.isEditable==="degree"){
-                    button = <OverlayTrigger
+                    button =
+                        <OverlayTrigger
                         key={"no-promote"}
                         placement={"top"}
                         overlay={

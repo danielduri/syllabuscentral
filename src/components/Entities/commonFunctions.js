@@ -23,7 +23,7 @@ export const listCourses = (courseList, setCourse, setCourseViewer) => {
                         setCourse(res);
                         setCourseViewer(true)
                     })
-                }} href="#"><strong> {`${course.courseid}: ${course.name}`}</strong></li> <p>{`${year} ${course.degree}`}</p>
+                }}><strong> {`${course.courseid}: ${course.name}`}</strong></li> <p>{`${year} ${course.degree}`}</p>
             </>
 
         )

@@ -15,7 +15,7 @@ function Degrees (){
 
     const user = useSelector((state) => state.user);
 
-    const getList = (search) => {
+    const getList = () => {
         tokenFetch('getDegrees', {
             method: 'get',
             headers: {"Content-type": "application/json"},

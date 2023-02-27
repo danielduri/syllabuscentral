@@ -3,16 +3,16 @@ import '../../Modal.css'
 import React, {useEffect, useState} from "react";
 import {tokenFetch} from "../../Common/functions/tokenFetch";
 import Select from "react-select";
-import {generateOptionWithValue, validateCode} from "../../Common/functions/misc";
+import {generateOption, generateOptionWithValue, validateCode} from "../../Common/functions/misc";
 
 export function EditDegree(props) {
     const [newName, setNewName] = useState("");
     const [wrongName, setWrongName] = useState("");
 
     const [duration, setDuration] = useState("");
-    const [wrongDuration, setWrongDuration] = useState("");
+    const [wrongDuration, setWrongDuration] = useState(false);
 
-    const [coordinator, setCoordinator] = useState("");
+    const [coordinator, setCoordinator] = useState(generateOption(""));
     const [coordinatorOptions, setCoordinatorOptions] = useState("");
     const [noCoordinator, setNoCoordinator] = useState(false)
 
@@ -118,7 +118,7 @@ export function EditDegree(props) {
         if(props.show){
             setNewName("")
             setDuration("")
-            setWrongDuration("")
+            setWrongDuration(false)
             setWrongName("")
             setNoCoordinator(false)
             tokenFetch("getDegreeCoordinators", {

@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+// noinspection DuplicatedCode
+
 import {Accordion, Button, Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
 import '../Modal.css'
 import React, {useEffect, useRef, useState} from "react";
@@ -358,154 +360,154 @@ export function CourseViewer(props) {
 
         let submit=true
 
-        if(degree===null || !Number.isInteger(degree.value)){
+        if(degree.value===null || !Number.isInteger(degree.value)){
             setInvalidDegree(true)
             submit=false
         }else{
             setInvalidDegree(false)
         }
 
-        if(year===null || !Number.isInteger(year.value)){
+        if(year.value===null || !Number.isInteger(year.value)){
             setInvalidYears(true)
             submit=false
         }else{
             setInvalidYears(false)
         }
 
-        if(period===null || !Number.isInteger(period.value)){
+        if(period.value===null || !Number.isInteger(period.value)){
             setInvalidPeriod(true)
             submit=false
         }else{
             setInvalidPeriod(false)
         }
 
-        if(language===null || language.value===""){
+        if(language.value===null || language.value===""){
             setInvalidLanguage(true)
             submit=false
         }else{
             setInvalidLanguage(false)
         }
 
-        if(code===null || !Number.parseInt(code) || !validateCode(code)){
+        if(code==="" || !Number.parseInt(code) || !validateCode(code)){
             setInvalidCode(true)
             submit=false
         }else{
             setInvalidCode(false)
         }
 
-        if(courseName===null || courseName===""){
+        if(courseName===undefined || courseName===""){
             setInvalidCourseName(true)
             submit=false
         }else{
             setInvalidCourseName(false)
         }
 
-        if(intlName===null || intlName===""){
+        if(intlName===undefined || intlName===""){
             setInvalidIntlName(true)
             submit=false
         }else{
             setInvalidIntlName(false)
         }
 
-        if(shorthand===null || shorthand==="" || !validateShorthand(shorthand)){
+        if(shorthand===undefined || shorthand==="" || !validateShorthand(shorthand)){
             setInvalidShorthand(true)
             submit=false
         }else{
             setInvalidShorthand(false)
         }
 
-        if(type===null || type.value===""){
+        if(type===undefined || type.value===""){
             setInvalidType(true)
             submit=false
         }else{
             setInvalidType(false)
         }
 
-        if(ECTS===null || !Number.parseFloat(ECTS.value)){
+        if(ECTS===undefined || !Number.parseFloat(ECTS.value)){
             setInvalidECTS(true)
             submit=false
         }else{
             setInvalidECTS(false)
         }
 
-        if(subject===null || subject.value===""){
+        if(subject===undefined || subject.value===""){
             setInvalidSubject(true)
             submit=false
         }else{
             setInvalidSubject(false)
         }
 
-        if(module===null || module.value===""){
+        if(module===undefined || module.value===""){
             setInvalidModule(true)
             submit=false
         }else{
             setInvalidModule(false)
         }
 
-        if(department===null || !Number.isInteger(department.value)){
+        if(department===undefined || !Number.isInteger(department.value)){
             setInvalidDepartment(true)
             submit=false
         }else{
             setInvalidDepartment(false)
         }
 
-        if(coordinator===null || !Number.isInteger(coordinator.value)){
+        if(coordinator===undefined || !Number.isInteger(coordinator.value)){
             setInvalidCoordinator(true)
             submit=false
         }else{
             setInvalidCoordinator(false)
         }
 
-        if(minContents===null || minContents===""){
+        if(minContents===undefined || minContents===""){
             setInvalidMinContents(true)
             submit=false
         }else{
             setInvalidMinContents(false)
         }
 
-        if(program===null || program===""){
+        if(program===undefined || program===""){
             setInvalidProgram(true)
             submit=false
         }else{
             setInvalidProgram(false)
         }
 
-        if(results===null || results===""){
+        if(results===undefined || results===""){
             setInvalidResults(true)
             submit=false
         }else{
             setInvalidResults(false)
         }
 
-        if(evaluation===null || evaluation===""){
+        if(evaluation===undefined || evaluation===""){
             setInvalidEvaluation(true)
             submit=false
         }else{
             setInvalidEvaluation(false)
         }
 
-        if(literature===null || literature===""){
+        if(literature===undefined || literature===""){
             setInvalidLiterature(true)
             submit=false
         }else{
             setInvalidLiterature(false)
         }
 
-        if(competencesBasic===null || competencesBasic===""){
+        if(competencesBasic===undefined || competencesBasic===""){
             setInvalidCompetencesBasic(true)
             submit=false
         }else{
             setInvalidCompetencesBasic(false)
         }
 
-        if(competencesGeneral===null || competencesGeneral===""){
+        if(competencesGeneral===undefined || competencesGeneral===""){
             setInvalidCompetencesGeneral(true)
             submit=false
         }else{
             setInvalidCompetencesGeneral(false)
         }
 
-        if(competencesSpecific===null || competencesSpecific===""){
+        if(competencesSpecific===undefined || competencesSpecific===""){
             setInvalidCompetencesSpecific(true)
             submit=false
         }else{
@@ -668,6 +670,7 @@ export function CourseViewer(props) {
         </Popover>
     );
 
+    // noinspection RequiredAttributes
     return (
         <Modal
             show={props.show}
