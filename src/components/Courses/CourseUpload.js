@@ -1,26 +1,31 @@
 import {Button, Modal} from "react-bootstrap";
-import './Modal.css'
+import '../Modal.css'
 import {useEffect, useState} from "react";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 
 
-export function ModelUpload(props)
+export function CourseUpload(props)
  {
 
      const [selectedFile, setSelectedFile] = useState(null);
      const [isFilePicked, setIsFilePicked] = useState(false);
      const [feedback, setFeedback] = useState("");
 
+     const [buttonsEnabled, setButtonsEnabled] = useState(true);
+
      useEffect(() => {
          setFeedback("")
          setSelectedFile(null)
          setIsFilePicked(false)
+         setButtonsEnabled(true)
      }, [props.show])
 
      const handleSubmission = () => {
          const formData = new FormData();
 
          formData.append('file', selectedFile);
+
+         setButtonsEnabled(false)
 
          tokenFetch(
              'uploadDoc',
@@ -30,12 +35,13 @@ export function ModelUpload(props)
              }
          )
              .then((result) => {
-                 if(result.toString().substring(0, 7)!=="Invalid"){
+                 if(result!=="error"){
                      props.setModel(result);
                      props.onHide();
                      props.openViewer(true);
                  }else{
-                     setFeedback(result)
+                     setFeedback("Invalid file")
+                     setButtonsEnabled(true)
                  }
 
              })
@@ -84,8 +90,8 @@ export function ModelUpload(props)
             </Modal.Body>
 
             <Modal.Footer>
-                <Button className={'mv3'} variant={'success'} onClick={handleSubmission}>Subir</Button>
-                <Button onClick={props.onHide}>Cancelar</Button>
+                <Button className={'mv3'} variant={'success'} disabled={!buttonsEnabled} onClick={handleSubmission}>{buttonsEnabled ? "Subir" : "Analizando..."}</Button>
+                <Button onClick={props.onHide} disabled={!buttonsEnabled}>Cancelar</Button>
             </Modal.Footer>
 
         </Modal>

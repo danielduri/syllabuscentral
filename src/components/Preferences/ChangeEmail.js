@@ -47,8 +47,7 @@ export function ChangeEmail(props) {
                     }
                 }
             }
-        })
-            .catch(error => {throw new Error(error)});
+        }).catch(error => {throw new Error(error)});
 
     }
 
@@ -71,7 +70,7 @@ export function ChangeEmail(props) {
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3 pv3" controlId="formBasicEmail">
                         <Form.Label>Nuevo correo electrónico</Form.Label>
-                        <Form.Control type="email" placeholder="ejemplo@universidad.edu" onChange={event => setNewEmail(event.target.value)} required isInvalid={wrongEmail} />
+                        <Form.Control type="email" placeholder="ejemplo@universidad.edu" onChange={event => setNewEmail(event.target.value)} required isInvalid={wrongEmail!==""} />
                         <Form.Control.Feedback type="invalid">
                             {wrongEmail==="used" ?  "Correo electrónico ya usado" : "Correo electrónico inválido"}
                         </Form.Control.Feedback>

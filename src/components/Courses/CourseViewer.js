@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+// noinspection DuplicatedCode
+
 import {Accordion, Button, Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
-import './Modal.css'
+import '../Modal.css'
 import React, {useEffect, useRef, useState} from "react";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -8,14 +10,15 @@ import TextEditor, {arrayRegenerate, arrayStringify} from "../Common/TextEditor"
 import TextareaAutosize from "react-textarea-autosize";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 import {useSelector} from "react-redux";
-import {emptyModel, generateOption, generateOptionWithValue, testCode, testShorthand} from "./modelViewerFunctions";
-import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./modelViewerOptions";
+import {emptyModel} from "./courseViewerFunctions";
+import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./courseViewerOptions";
+import {generateOption, generateOptionWithValue, validateCode, validateShorthand} from "../Common/functions/misc";
 
 //TODO deploy to production
 //TODO handle backend responses
 //TODO support for additional fields
 
-export function ModelViewer(props) {
+export function CourseViewer(props) {
 
     //region state declarations
     const modalRef = useRef();
@@ -120,7 +123,7 @@ export function ModelViewer(props) {
     }, [props.show])
 
     useEffect(()=>{
-        if (testCode(code)){
+        if (validateCode(code)){
             setInvalidCode(false)
         }else{
             setInvalidCode(true)
@@ -128,7 +131,7 @@ export function ModelViewer(props) {
     },[code])
 
     useEffect(()=>{
-        if (testShorthand(shorthand)){
+        if (validateShorthand(shorthand)){
             setInvalidShorthand(false)
         }else {
             setInvalidShorthand(true)
@@ -227,7 +230,9 @@ export function ModelViewer(props) {
         } else {
             readyModel.period = generateOptionWithValue("Ninguno", 0)
         }
-        if (Number.parseInt(model.year) > 0) {
+        if (Number.parseInt(model.year) === 0) {
+            readyModel.year = generateOptionWithValue(`Optativas`, 0)
+        } else if (Number.parseInt(model.year) > 0) {
             readyModel.year = generateOptionWithValue(`${model.year}º`, model.year)
         } else {
             readyModel.year = null
@@ -280,10 +285,6 @@ export function ModelViewer(props) {
                     readyModel.department = generateOptionWithValue(model.department, res.department)
                     populateDepartmentUsers(res)
                 }else{
-                    readyModel.department = emptyModel.department
-                }
-
-                if(props.mode==="validate"){
                     readyModel.department = emptyModel.department
                 }
 
@@ -359,154 +360,154 @@ export function ModelViewer(props) {
 
         let submit=true
 
-        if(degree===null || !Number.isInteger(degree.value)){
+        if(degree.value===null || !Number.isInteger(degree.value)){
             setInvalidDegree(true)
             submit=false
         }else{
             setInvalidDegree(false)
         }
 
-        if(year===null || !Number.isInteger(year.value)){
+        if(year.value===null || !Number.isInteger(year.value)){
             setInvalidYears(true)
             submit=false
         }else{
             setInvalidYears(false)
         }
 
-        if(period===null || !Number.isInteger(period.value)){
+        if(period.value===null || !Number.isInteger(period.value)){
             setInvalidPeriod(true)
             submit=false
         }else{
             setInvalidPeriod(false)
         }
 
-        if(language===null || language.value===""){
+        if(language.value===null || language.value===""){
             setInvalidLanguage(true)
             submit=false
         }else{
             setInvalidLanguage(false)
         }
 
-        if(code===null || !Number.parseInt(code) || !testCode(code)){
+        if(code==="" || !Number.parseInt(code) || !validateCode(code)){
             setInvalidCode(true)
             submit=false
         }else{
             setInvalidCode(false)
         }
 
-        if(courseName===null || courseName===""){
+        if(courseName===undefined || courseName===""){
             setInvalidCourseName(true)
             submit=false
         }else{
             setInvalidCourseName(false)
         }
 
-        if(intlName===null || intlName===""){
+        if(intlName===undefined || intlName===""){
             setInvalidIntlName(true)
             submit=false
         }else{
             setInvalidIntlName(false)
         }
 
-        if(shorthand===null || shorthand==="" || !testShorthand(shorthand)){
+        if(shorthand===undefined || shorthand==="" || !validateShorthand(shorthand)){
             setInvalidShorthand(true)
             submit=false
         }else{
             setInvalidShorthand(false)
         }
 
-        if(type===null || type.value===""){
+        if(type===undefined || type.value===""){
             setInvalidType(true)
             submit=false
         }else{
             setInvalidType(false)
         }
 
-        if(ECTS===null || !Number.parseFloat(ECTS.value)){
+        if(ECTS===undefined || !Number.parseFloat(ECTS.value)){
             setInvalidECTS(true)
             submit=false
         }else{
             setInvalidECTS(false)
         }
 
-        if(subject===null || subject.value===""){
+        if(subject===undefined || subject.value===""){
             setInvalidSubject(true)
             submit=false
         }else{
             setInvalidSubject(false)
         }
 
-        if(module===null || module.value===""){
+        if(module===undefined || module.value===""){
             setInvalidModule(true)
             submit=false
         }else{
             setInvalidModule(false)
         }
 
-        if(department===null || !Number.isInteger(department.value)){
+        if(department===undefined || !Number.isInteger(department.value)){
             setInvalidDepartment(true)
             submit=false
         }else{
             setInvalidDepartment(false)
         }
 
-        if(coordinator===null || !Number.isInteger(coordinator.value)){
+        if(coordinator===undefined || !Number.isInteger(coordinator.value)){
             setInvalidCoordinator(true)
             submit=false
         }else{
             setInvalidCoordinator(false)
         }
 
-        if(minContents===null || minContents===""){
+        if(minContents===undefined || minContents===""){
             setInvalidMinContents(true)
             submit=false
         }else{
             setInvalidMinContents(false)
         }
 
-        if(program===null || program===""){
+        if(program===undefined || program===""){
             setInvalidProgram(true)
             submit=false
         }else{
             setInvalidProgram(false)
         }
 
-        if(results===null || results===""){
+        if(results===undefined || results===""){
             setInvalidResults(true)
             submit=false
         }else{
             setInvalidResults(false)
         }
 
-        if(evaluation===null || evaluation===""){
+        if(evaluation===undefined || evaluation===""){
             setInvalidEvaluation(true)
             submit=false
         }else{
             setInvalidEvaluation(false)
         }
 
-        if(literature===null || literature===""){
+        if(literature===undefined || literature===""){
             setInvalidLiterature(true)
             submit=false
         }else{
             setInvalidLiterature(false)
         }
 
-        if(competencesBasic===null || competencesBasic===""){
+        if(competencesBasic===undefined || competencesBasic===""){
             setInvalidCompetencesBasic(true)
             submit=false
         }else{
             setInvalidCompetencesBasic(false)
         }
 
-        if(competencesGeneral===null || competencesGeneral===""){
+        if(competencesGeneral===undefined || competencesGeneral===""){
             setInvalidCompetencesGeneral(true)
             submit=false
         }else{
             setInvalidCompetencesGeneral(false)
         }
 
-        if(competencesSpecific===null || competencesSpecific===""){
+        if(competencesSpecific===undefined || competencesSpecific===""){
             setInvalidCompetencesSpecific(true)
             submit=false
         }else{
@@ -669,6 +670,7 @@ export function ModelViewer(props) {
         </Popover>
     );
 
+    // noinspection RequiredAttributes
     return (
         <Modal
             show={props.show}

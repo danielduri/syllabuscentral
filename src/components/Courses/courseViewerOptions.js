@@ -1,4 +1,4 @@
-import {generateOption} from "./modelViewerFunctions";
+import {generateOption} from "../Common/functions/misc";
 
 export const typeOptions = [
     generateOption("Formación básica"),
