@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build": "dotenv -e .env.production react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start:dev": "dotenv -e .env.development react-scripts start"
