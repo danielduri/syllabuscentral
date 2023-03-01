@@ -76,7 +76,7 @@ export function EditSchool(props) {
 
     const eliminateButton = () => {
         if(props.school){
-            if(props.school.schoolID!==0){
+            if(props.school.schoolID!==1){
                 return <OverlayTrigger rootClose={true} trigger="click" placement="top" overlay={confirmEliminatePopover}>
                             <Button variant="danger" className={"mr-auto"} key={"delete"}>Eliminar</Button>
                         </OverlayTrigger>
