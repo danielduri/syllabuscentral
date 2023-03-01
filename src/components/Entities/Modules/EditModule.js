@@ -63,7 +63,7 @@ export function EditModule(props) {
 
         if(upload){
             tokenFetch("newModule", {
-                method: 'put',
+                method: 'post',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
                     name: newName,

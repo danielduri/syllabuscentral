@@ -36,7 +36,7 @@ function Degrees (){
                         <td>{item.coordinator}</td>
                         <td>
                             <div className={"ml-auto mr-auto"}>
-                                <Button variant={"info"} key={item.degreeID}  onClick={() => {
+                                <Button variant={"info"} key={item.degreeID+"b"}  onClick={() => {
                                     setDegree({
                                         name: item.name,
                                         duration: item.duration,

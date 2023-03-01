@@ -548,7 +548,7 @@ export function CourseViewer(props) {
 
             if(props.model===undefined || props.mode==="copy" || props.mode==="validate"){
                 tokenFetch('newModel', {
-                    method: 'put',
+                    method: 'post',
                     headers: {"Content-type": "application/json"},
                     body: JSON.stringify({
                         model: newModel

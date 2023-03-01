@@ -25,7 +25,7 @@ function Users (){
                 let itemList = [];
                 for (let i = 0; i < data.length; i++) {
                     const item = data[i];
-                    itemList.push( <tr key={item.degreeID}>
+                    itemList.push( <tr key={item.userID}>
                         <td>{item.userName}</td>
                         <td>{item.email}</td>
                         <td>{displayUserType(item.userType)}</td>
@@ -33,7 +33,7 @@ function Users (){
 
                         <td>
                             <div className={"ml-auto mr-auto"}>
-                                <Button variant={"primary"} key={item.degreeID}  onClick={() => {
+                                <Button variant={"primary"} key={item.userID}  onClick={() => {
                                     setUserProp({
                                         userID: item.userID,
                                         userName: item.userName,

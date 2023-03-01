@@ -37,18 +37,18 @@ function Departments (){
 
                     for (const member of item.members) {
                         members.push(
-                            <li>{member.userName}</li>
+                            <li key={member.userID+"member"}>{member.userName}</li>
                         )
                     }
 
                     itemList.push( <tr key={item.departmentID}>
                         <td>{item.shorthand}</td>
                         <td>{item.department}</td>
-                        <td><ul>{courses}</ul></td>
-                        <td><ul>{members}</ul></td>
+                        <td key={item.departmentID+"c"}><ul key={item.departmentID+"cl"}>{courses}</ul></td>
+                        <td key={item.departmentID+"m"}><ul key={item.departmentID+"ml"}>{members}</ul></td>
                         <td>
                             <div className={"ml-auto mr-auto"}>
-                                <Button variant={"warning"} key={item.degreeID}  onClick={() => {
+                                <Button variant={"warning"} key={item.departmentID+"b"}  onClick={() => {
                                     setDepartment({
                                         shorthand: item.shorthand,
                                         name: item.department,

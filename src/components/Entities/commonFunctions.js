@@ -14,8 +14,9 @@ export const listCourses = (courseList, setCourse, setCourseViewer) => {
         }
 
         courses.push(
-            <>
-                <li className={"blue underline"} onClick={()=>{
+            <div key={course.courseid+"course"}>
+                <li
+                    className={"blue underline"} onClick={()=>{
                     tokenFetch(`getModel?courseid=${course.courseid}`, {
                         method: 'get',
                         headers: {"Content-type": "application/json"},
@@ -24,7 +25,7 @@ export const listCourses = (courseList, setCourse, setCourseViewer) => {
                         setCourseViewer(true)
                     })
                 }}><strong> {`${course.courseid}: ${course.name}`}</strong></li> <p>{`${year} ${course.degree}`}</p>
-            </>
+            </div>
 
         )
     }

@@ -118,7 +118,7 @@ export function EditUser(props) {
 
         if(upload){
             tokenFetch("newUser", {
-                method: 'put',
+                method: 'post',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
                     name: newName,

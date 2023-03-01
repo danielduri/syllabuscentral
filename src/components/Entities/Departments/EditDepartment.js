@@ -66,7 +66,7 @@ export function EditDepartment(props) {
 
         if(upload){
             tokenFetch("newDepartment", {
-                method: 'put',
+                method: 'post',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
                     name: newName,

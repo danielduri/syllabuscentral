@@ -13,7 +13,7 @@ function updateOptions(options) {
 }
 
 export async function tokenFetch(endpoint, options) {
-    const url = `http://192.168.1.45:3001/${endpoint}`
+    const url = `${process.env.REACT_APP_API_URL}/${endpoint}`
     return fetch(url, updateOptions(options))
         .then(result => result.json())
         .then(json => {

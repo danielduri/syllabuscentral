@@ -65,7 +65,7 @@ export function EditDegree(props) {
 
         if(upload){
             tokenFetch("newDegree", {
-                method: 'put',
+                method: 'post',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
                     name: newName,

@@ -34,7 +34,7 @@ export function EditSchool(props) {
         }else{
             setWrongName(false)
             tokenFetch("newSchool", {
-                method: 'put',
+                method: 'post',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
                     schoolName: newName
