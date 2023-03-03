@@ -35,12 +35,16 @@ export function CourseUpload(props)
              }
          )
              .then((result) => {
-                 if(result!=="error"){
+                 if(result!=="error" && result.status==="OK"){
                      props.setModel(result);
                      props.onHide();
                      props.openViewer(true);
                  }else{
-                     setFeedback("Invalid file")
+                     if(!result.status){
+                         setFeedback("Request timed out. Please try again.")
+                     }else{
+                         setFeedback("Invalid file")
+                     }
                      setButtonsEnabled(true)
                  }
 

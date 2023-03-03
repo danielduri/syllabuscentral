@@ -19,7 +19,7 @@ export const validateName = (name) => {
 export const validatePassword = (password) => {
     //La contraseña debe contener al menos 6 caracteres, entre ellos
     //al menos una letra mayúscula, una letra minúscula, un número y un caracter especial.
-    if(password==="pass"){
+    if(password==="pass" && process.env.NODE_ENV==="development"){
         return true;
     }
     if(password.length<6){
