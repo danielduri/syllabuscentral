@@ -33,7 +33,7 @@ function Courses (){
                 search: search
             })
         }).then(data =>{
-            if(data.length>0){
+            if(data!==undefined && data.length>0){
                 let itemList = [];
                 for (let i = 0; i < data.length; i++) {
                     const item = data[i];

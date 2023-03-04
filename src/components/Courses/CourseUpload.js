@@ -1,7 +1,7 @@
 import {Button, Modal} from "react-bootstrap";
 import '../Modal.css'
 import {useEffect, useState} from "react";
-import {tokenFetch} from "../Common/functions/tokenFetch";
+//import {tokenFetch} from "../Common/functions/tokenFetch";
 
 
 export function CourseUpload(props)
@@ -21,12 +21,53 @@ export function CourseUpload(props)
      }, [props.show])
 
      const handleSubmission = () => {
-         const formData = new FormData();
 
-         formData.append('file', selectedFile);
+         const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}/uploadDoc`);
 
-         setButtonsEnabled(false)
+         let file
 
+         ws.onopen = () => {
+             const reader = new FileReader();
+             reader.onload = () => {
+                 ws.send(JSON.stringify({name: selectedFile.name}))
+                 file = reader.result;
+             };
+             reader.readAsArrayBuffer(selectedFile);
+         }
+
+         ws.onmessage = (e) => {
+             if(e.data==="name"){
+                 ws.send(file)
+             }
+             else if(e.data==="file"){
+                 setButtonsEnabled(false)
+             }else if(e.data==="error"){
+                 setFeedback("Error. Por favor, inténtelo de nuevo.")
+                 setButtonsEnabled(true)
+             }else{
+                 try{
+                     const data = JSON.parse(e.data)
+                     if(data.status==="OK"){
+                         props.setModel(data);
+                         props.onHide();
+                         props.openViewer(true);
+                     }else{
+                         if(!data.status){
+                             setFeedback("Request timed out. Please try again.")
+                         }else{
+                             setFeedback("Invalid file")
+                         }
+                         setButtonsEnabled(true)
+                     }
+                 }catch (e) {
+                     setFeedback("Invalid response")
+                     setButtonsEnabled(true)
+                 }
+             }
+         }
+
+
+         /*
          tokenFetch(
              'uploadDoc',
              {
@@ -52,6 +93,8 @@ export function CourseUpload(props)
              .catch((error) => {
                  console.error('Error:', error);
              });
+
+          */
      };
 
      const changeHandler = (event) => {
@@ -60,7 +103,7 @@ export function CourseUpload(props)
          setFeedback("")
      };
 
-    return (
+     return (
         <Modal
             show={props.show}
             onHide={props.onHide}
