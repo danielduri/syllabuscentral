@@ -360,28 +360,28 @@ export function CourseViewer(props) {
 
         let submit=true
 
-        if(degree.value===null || !Number.isInteger(degree.value)){
+        if(degree===null || degree===undefined || degree.value===null || !Number.isInteger(degree.value)){
             setInvalidDegree(true)
             submit=false
         }else{
             setInvalidDegree(false)
         }
 
-        if(year.value===null || !Number.isInteger(year.value)){
+        if(year===null || year===undefined || year.value===null || !Number.isInteger(year.value)){
             setInvalidYears(true)
             submit=false
         }else{
             setInvalidYears(false)
         }
 
-        if(period.value===null || !Number.isInteger(period.value)){
+        if(period===null || period===undefined || period.value===null || !Number.isInteger(period.value)){
             setInvalidPeriod(true)
             submit=false
         }else{
             setInvalidPeriod(false)
         }
 
-        if(language.value===null || language.value===""){
+        if(language===null || language===undefined || language.value===null || language.value===""){
             setInvalidLanguage(true)
             submit=false
         }else{
@@ -416,42 +416,42 @@ export function CourseViewer(props) {
             setInvalidShorthand(false)
         }
 
-        if(type===undefined || type.value===""){
+        if(type===null || type===undefined || type.value===""){
             setInvalidType(true)
             submit=false
         }else{
             setInvalidType(false)
         }
 
-        if(ECTS===undefined || !Number.parseFloat(ECTS.value)){
+        if(ECTS===null || ECTS===undefined || !Number.parseFloat(ECTS.value)){
             setInvalidECTS(true)
             submit=false
         }else{
             setInvalidECTS(false)
         }
 
-        if(subject===undefined || subject.value===""){
+        if(subject===null || subject===undefined || subject.value===""){
             setInvalidSubject(true)
             submit=false
         }else{
             setInvalidSubject(false)
         }
 
-        if(module===undefined || module.value===""){
+        if(module===null || module===undefined || module.value===""){
             setInvalidModule(true)
             submit=false
         }else{
             setInvalidModule(false)
         }
 
-        if(department===undefined || !Number.isInteger(department.value)){
+        if(department===null || department===undefined || !Number.isInteger(department.value)){
             setInvalidDepartment(true)
             submit=false
         }else{
             setInvalidDepartment(false)
         }
 
-        if(coordinator===undefined || !Number.isInteger(coordinator.value)){
+        if(coordinator===null || coordinator===undefined || !Number.isInteger(coordinator.value)){
             setInvalidCoordinator(true)
             submit=false
         }else{
