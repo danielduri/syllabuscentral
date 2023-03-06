@@ -678,7 +678,7 @@ export function CourseViewer(props) {
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            backdrop={"static"}
+            backdrop={edit ? "static" : true}
         >
 
             <Form>

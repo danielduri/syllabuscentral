@@ -37,7 +37,8 @@ function Schools (){
                                 <Button variant={"dark"} key={item.schoolID+"edit"} className={"mh1"} onClick={() => {
                                     setSchool({
                                         schoolName: item.schoolName,
-                                        schoolID: item.schoolID
+                                        schoolID: item.schoolID,
+                                        schoolAdm: item.schoolAdm
                                     })
                                     setEdit(true);
                                 }}>Editar</Button>

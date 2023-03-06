@@ -2,7 +2,6 @@ import './App.css';
 import React, {useEffect} from "react";
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Login from "../Login/Login";
-import Dash from "../Dash/Dash";
 import Preferences from "../Preferences/Preferences";
 import ErrorBoundary from "../Common/ErrorBoundary"
 import MainNavbar from "../Common/MainNavbar";
@@ -47,9 +46,8 @@ function App(){
                   }
                   <div className={"content pa4"}>
                           <Routes>
-                              <Route path="/" element={<Navigate replace to={"/dash"}/>} />
-                              <Route path="*" element={<Navigate replace to={"/dash"}/>} />
-                              <Route path="/dash" element={<Dash />} />
+                              <Route path="/" element={<Navigate replace to={"/courses"}/>} />
+                              <Route path="*" element={<Navigate replace to={"/courses"}/>} />
                               <Route path="/preferences" element={<Preferences/>} />
                               <Route path="/courses" element={<Courses/>} />
                               <Route path="/degrees" element={<Degrees/>} />

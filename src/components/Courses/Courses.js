@@ -25,6 +25,13 @@ function Courses (){
 
     const [ list, setList ] = useState([]);
 
+    const getCourseForView = (courseID) => {
+        getModel(courseID).then(response => {
+            setModel(response);
+            setView(true);
+        })
+    }
+
     const getList = (search) => {
         tokenFetch('getModels', {
             method: 'put',
@@ -45,21 +52,15 @@ function Courses (){
                         itemList.push(<tr key={item.degree}><td colSpan={100}><h4 className={"pv2"}>{item.degree}</h4></td></tr>)
                     }
                     itemList.push( <tr key={item.courseid}>
-                        <td>{item.courseid}</td>
-                        <td>{item.shorthand}</td>
-                        <td>{item.name}</td>
-                        <td>{item.ECTS}</td>
-                        <td>{item.coordinator}</td>
-                        <td>{item.department}</td>
-                        <td>{item.type}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.courseid}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.shorthand}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.name}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.ECTS}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.coordinator}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.department}</td>
+                        <td className={"pointer"} onClick={()=>getCourseForView(item.courseid)}>{item.type}</td>
                         <td>
                             <div>
-                                <Button variant={"success"} key={item.courseid} className={"ma1"} onClick={() => {
-                                    getModel(item.courseid).then(response => {
-                                        setModel(response);
-                                        setView(true);
-                                    })
-                                }}>Ver</Button>
                                 <Button variant={"success"} key={item.courseid + "copy"} className={"ma1"} onClick={() => {
                                     getModel(item.courseid).then(response => {
                                         setModel(response);
