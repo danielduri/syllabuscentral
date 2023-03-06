@@ -20,7 +20,7 @@ function Degrees (){
             method: 'get',
             headers: {"Content-type": "application/json"},
         }).then(data =>{
-            if(data.length>0){
+            if(data && data.length>0){
                 let itemList = [];
                 for (let i = 0; i < data.length; i++) {
                     const item = data[i];

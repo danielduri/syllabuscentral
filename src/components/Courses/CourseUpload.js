@@ -29,7 +29,10 @@ export function CourseUpload(props)
          ws.onopen = () => {
              const reader = new FileReader();
              reader.onload = () => {
-                 ws.send(JSON.stringify({name: selectedFile.name}))
+                 ws.send(JSON.stringify({
+                     name: selectedFile.name,
+                     token: localStorage.jwtToken
+                 }))
                  file = reader.result;
              };
              reader.readAsArrayBuffer(selectedFile);
