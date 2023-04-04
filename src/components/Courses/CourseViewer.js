@@ -15,10 +15,6 @@ import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./course
 import {generateOption, generateOptionWithValue, validateCode, validateShorthand} from "../Common/functions/misc";
 import ReactSwitch from "react-switch";
 
-//TODO deploy to production
-//TODO handle backend responses
-//TODO support for additional fields
-
 export function CourseViewer(props) {
 
     //region state declarations
