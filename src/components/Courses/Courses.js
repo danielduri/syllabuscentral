@@ -101,7 +101,7 @@ function Courses (){
 
             <div className={"center tc pa3"}>
                 <Button variant={"success"} className={"w-20 ma1"} onClick={() => setNewModel(true)}>
-                    Nuevo modelo</Button>
+                    Nueva asignatura</Button>
                 <CourseViewer show={newModel} mode={"create"} onHide={() => setNewModel(false)}></CourseViewer>
 
                 <CourseViewer show={view} mode={"view"} model={model} onHide={() => setView(false)}></CourseViewer>
@@ -111,7 +111,7 @@ function Courses (){
                 <CourseViewer show={validate} mode={"validate"} model={model} onHide={() => setValidate(false)}></CourseViewer>
 
                 <Button variant={"success"} className={"w-20 ma1"} onClick={() => setUpload(true)}>
-                    Subir modelo</Button>
+                    Subir asignatura</Button>
                 <CourseUpload show={upload} onHide={() => setUpload(false)} setModel={setModel} openViewer={setValidate}></CourseUpload>
 
             </div>

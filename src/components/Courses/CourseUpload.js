@@ -1,4 +1,4 @@
-import {Button, Modal} from "react-bootstrap";
+import {Button, Modal, Spinner} from "react-bootstrap";
 import '../Modal.css'
 import {useEffect, useState} from "react";
 //import {tokenFetch} from "../Common/functions/tokenFetch";
@@ -47,6 +47,9 @@ export function CourseUpload(props)
              }else if(e.data==="error"){
                  setFeedback("Error. Por favor, inténtelo de nuevo.")
                  setButtonsEnabled(true)
+             }else if(e.data==="InvalidFile"){
+                 setFeedback("Formato de archivo inválido")
+                 setButtonsEnabled(true)
              }else{
                  try{
                      const data = JSON.parse(e.data)
@@ -57,8 +60,6 @@ export function CourseUpload(props)
                      }else{
                          if(!data.status){
                              setFeedback("Request timed out. Please try again.")
-                         }else{
-                             setFeedback("Invalid file")
                          }
                          setButtonsEnabled(true)
                      }
@@ -116,7 +117,7 @@ export function CourseUpload(props)
         >
             <Modal.Header closeButton className={"h-auto"}>
                 <Modal.Title id="contained-modal-title-vcenter" className={"h-auto"}>
-                    <h3 className={"h-auto"}> Subir modelo </h3>
+                    <h3 className={"h-auto"}> Subir asignatura </h3>
                 </Modal.Title>
             </Modal.Header>
 
@@ -140,7 +141,10 @@ export function CourseUpload(props)
             </Modal.Body>
 
             <Modal.Footer>
-                <Button className={'mv3'} variant={'success'} disabled={!buttonsEnabled} onClick={handleSubmission}>{buttonsEnabled ? "Subir" : "Analizando..."}</Button>
+                {
+                    buttonsEnabled ? <></> : <Spinner variant="success" animation="border" role="status"/>
+                }
+                <Button className={'mv3'} variant={'success'} disabled={!buttonsEnabled || !isFilePicked} onClick={handleSubmission}>{buttonsEnabled ? "Subir" : "Analizando..."}</Button>
                 <Button onClick={props.onHide} disabled={!buttonsEnabled}>Cancelar</Button>
             </Modal.Footer>
 

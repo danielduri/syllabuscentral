@@ -16,10 +16,12 @@ export const arrayRegenerate = (string) => {
     const array = string.split('\n')
     let ret = []
     for(const item of array){
-        if(item[0]==='•'){
-            ret.push(item.substring(1))
-        }else{
-            ret.push(item)
+        if(item.trim()){
+            if(item[0]==='•'){
+                ret.push(item.substring(1))
+            }else{
+                ret.push(item)
+            }
         }
     }
     return ret;
@@ -36,6 +38,11 @@ const TextEditor = (props) => {
         }
     }, [props.value])
 
+    const trimText = () => {
+        console.log("inner blur")
+        const regex = /, \n?$/
+        props.onChange(props.value.replace(regex, ''))
+    }
 
     return(
         <div>
@@ -46,6 +53,8 @@ const TextEditor = (props) => {
                                     props.onChange(e.target.value)
                               }}
                               disabled={props.disabled}
+                              onFocus={props.onFocus}
+                              onBlur={props.onBlur}
                               placeholder={"Asegúrate que el número de ítems totales que deseas poner es igual al número de líneas mostrado a la izquierda"}></TextareaAutosize>
         </div>
     )

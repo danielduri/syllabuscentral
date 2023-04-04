@@ -1,3 +1,5 @@
+import {Button} from "react-bootstrap";
+
 export const emptyModel = {
     degree: "",
     year: "",
@@ -23,4 +25,16 @@ export const emptyModel = {
         general: "",
         specific: ""
     }
+}
+
+export const onFocus = () => {
+    console.log("onFocus")
+
+}
+
+export const makeRecButton = (rec, appendText) => {
+    return (
+        //onClick=append button text to textarea
+        <Button variant={"outline-secondary"} className={"br-pill ma2"} onClick={()=>appendText()}>{rec}</Button>
+    )
 }

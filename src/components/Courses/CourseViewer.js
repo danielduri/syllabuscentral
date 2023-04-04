@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // noinspection DuplicatedCode
 
-import {Accordion, Button, Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
+import {Accordion, Button, Form, Modal, OverlayTrigger, Popover, Spinner} from "react-bootstrap";
 import '../Modal.css'
 import React, {useEffect, useRef, useState} from "react";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
-import TextEditor, {arrayRegenerate, arrayStringify} from "../Common/TextEditor";
+import {arrayRegenerate, arrayStringify} from "../Common/TextEditor";
 import TextareaAutosize from "react-textarea-autosize";
 import {tokenFetch} from "../Common/functions/tokenFetch";
 import {useSelector} from "react-redux";
 import {emptyModel} from "./courseViewerFunctions";
 import {ECTSoptions, languageOptions, periodOptions, typeOptions} from "./courseViewerOptions";
 import {generateOption, generateOptionWithValue, validateCode, validateShorthand} from "../Common/functions/misc";
+import ReactSwitch from "react-switch";
 
 //TODO deploy to production
 //TODO handle backend responses
@@ -30,11 +31,13 @@ export function CourseViewer(props) {
         Buttons: edit/OK
 
     in edit, all fields are enabled and has props.model
-        fetch is similar to edit but props.model is given
+    validate is similar to edit but props.model is given by the API
+    copy is similar to edit but some fields are cleared
         Buttons: delete/save/cancel
 
     in create, all fields are enabled and uses emptyModel
         Buttons: save/cancel
+
      */
 
     const [degree, setDegree] = useState(generateOption(""));
@@ -59,6 +62,7 @@ export function CourseViewer(props) {
 
     const [intlName, setIntlName] = useState("");
     const [invalidIntlName, setInvalidIntlName] = useState(false);
+    const [recIntlName, setRecIntlName] = useState([]);
 
     const [shorthand, setShorthand] = useState("");
     const [invalidShorthand, setInvalidShorthand] = useState(false);
@@ -83,27 +87,35 @@ export function CourseViewer(props) {
 
     const [minContents, setMinContents] = useState("");
     const [invalidMinContents, setInvalidMinContents] = useState(false);
+    const [recMinContents, setRecMinContents] = useState([]);
 
     const [program, setProgram] = useState("");
     const [invalidProgram, setInvalidProgram] = useState(false);
+    const [recProgram, setRecProgram] = useState([]);
 
     const [competencesBasic, setCompetencesBasic] = useState("");
     const [invalidCompetencesBasic, setInvalidCompetencesBasic] = useState(false);
+    const [recCompetencesBasic, setRecCompetencesBasic] = useState([]);
 
     const [competencesGeneral, setCompetencesGeneral] = useState("");
     const [invalidCompetencesGeneral, setInvalidCompetencesGeneral] = useState(false);
+    const [recCompetencesGeneral, setRecCompetencesGeneral] = useState([]);
 
     const [competencesSpecific, setCompetencesSpecific] = useState("");
     const [invalidCompetencesSpecific, setInvalidCompetencesSpecific] = useState(false);
+    const [recCompetencesSpecific, setRecCompetencesSpecific] = useState([]);
 
     const [results, setResults] = useState("");
     const [invalidResults, setInvalidResults] = useState(false);
+    const [recResults, setRecResults] = useState([]);
 
     const [evaluation, setEvaluation] = useState("");
     const [invalidEvaluation, setInvalidEvaluation] = useState(false);
+    const [recEvaluation, setRecEvaluation] = useState([]);
 
     const [literature, setLiterature] = useState("");
     const [invalidLiterature, setInvalidLiterature] = useState(false);
+    const [recLiterature, setRecLiterature] = useState([]);
 
     const [enableEditButton, setEnableEditButton] = useState(false);
     const [enableDeleteButton, setEnableDeleteButton] = useState(false);
@@ -115,9 +127,13 @@ export function CourseViewer(props) {
     const [moduleOptions, setModuleOptions] = useState([])
     const [subjectOptions, setSubjectOptions] = useState([])
     const [coordinatorOptions, setCoordinatorOptions] = useState([])
+
+    const [recsActive, setRecsActive] = useState(false);
+    const [cost, setCost] = useState(0)
     //endregion
 
     //region useEffect hooks
+
     useEffect( () => {
         init();
     }, [props.show])
@@ -170,15 +186,32 @@ export function CourseViewer(props) {
         setInvalidLiterature(false)
     }
 
+    function clearRecommendations() {
+        setRecsActive(false)
+        setRecIntlName([])
+        setRecMinContents([])
+        setRecProgram([])
+        setRecCompetencesBasic([])
+        setRecCompetencesGeneral([])
+        setRecCompetencesSpecific([])
+        setRecResults([])
+        setRecEvaluation([])
+        setRecLiterature([])
+        setCost(0)
+    }
+
     const init = () => {
         if (props.show) {
             clearFeedback();
+            clearRecommendations();
             if(props.mode==="create"){
                 setEdit(true)
+                setRecsActive(true)
                 setCodeIsEditable(true)
                 loadData(true).then(r => null)
             }else if(props.mode==="edit"){
                 setEdit(true)
+                setRecsActive(true)
                 loadData(true).then(r => null)
             }else if(props.mode==="copy" || props.mode==="validate"){
                 setEdit(true)
@@ -238,7 +271,7 @@ export function CourseViewer(props) {
             readyModel.year = null
         }
         readyModel.type = generateOption(model.type)
-
+        //TODO: include evaluation
         readyModel.minContents = arrayStringify(model.minContents)
         readyModel.program = arrayStringify(model.program)
         readyModel.results = arrayStringify(model.results)
@@ -458,56 +491,56 @@ export function CourseViewer(props) {
             setInvalidCoordinator(false)
         }
 
-        if(minContents===undefined || minContents===""){
+        if(minContents===undefined || !minContents.trim()){
             setInvalidMinContents(true)
             submit=false
         }else{
             setInvalidMinContents(false)
         }
 
-        if(program===undefined || program===""){
+        if(program===undefined || !program.trim()){
             setInvalidProgram(true)
             submit=false
         }else{
             setInvalidProgram(false)
         }
 
-        if(results===undefined || results===""){
+        if(results===undefined || !results.trim()){
             setInvalidResults(true)
             submit=false
         }else{
             setInvalidResults(false)
         }
 
-        if(evaluation===undefined || evaluation===""){
+        if(evaluation===undefined || !evaluation.trim()){
             setInvalidEvaluation(true)
             submit=false
         }else{
             setInvalidEvaluation(false)
         }
 
-        if(literature===undefined || literature===""){
+        if(literature===undefined || !literature.trim()){
             setInvalidLiterature(true)
             submit=false
         }else{
             setInvalidLiterature(false)
         }
 
-        if(competencesBasic===undefined || competencesBasic===""){
+        if(competencesBasic===undefined || !competencesBasic.trim()){
             setInvalidCompetencesBasic(true)
             submit=false
         }else{
             setInvalidCompetencesBasic(false)
         }
 
-        if(competencesGeneral===undefined || competencesGeneral===""){
+        if(competencesGeneral===undefined || !competencesGeneral.trim()){
             setInvalidCompetencesGeneral(true)
             submit=false
         }else{
             setInvalidCompetencesGeneral(false)
         }
 
-        if(competencesSpecific===undefined || competencesSpecific===""){
+        if(competencesSpecific===undefined || !competencesSpecific.trim()){
             setInvalidCompetencesSpecific(true)
             submit=false
         }else{
@@ -630,6 +663,66 @@ export function CourseViewer(props) {
         }
     }
 
+    const getRecs = (fieldName, recs, setRecs, fieldState, setFieldState) => {
+        if(recs.length===0 && courseName!=="" && courseName!==undefined && degree.label!==""
+            && degree.label!==undefined && fieldName!=="" && fieldName!==undefined && edit && recsActive){
+
+            setRecs(<div className={"ma3"}> <Spinner animation="border" variant="success"/>
+                <p className={"dib v-mid mh3"}> Generando sugerencias...</p> </div>)
+
+            tokenFetch("recommendations", {
+                method: "post",
+                headers: {"Content-type": "application/json"},
+                body: JSON.stringify({
+                    "field": fieldName,
+                    "title": courseName,
+                    "degree": degree.label,
+                    "completion": fieldState
+                })
+            }).then(res => {
+                try{
+                    const regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+                    res.recommendations = res.recommendations.replace(regex, '');
+                    const recommendations = JSON.parse(res.recommendations)
+                    if(Array.isArray(recommendations)) {
+                        let array = []
+                        for (const element of recommendations) {
+                            array.push(
+                                <Button id={fieldName + element + "button"}
+                                        key={fieldName + element + "button"}
+                                        variant={"outline-info"}
+                                        className={"br-pill ma2"}
+                                        onClick={() => {
+                                            appendText(fieldState, element, setFieldState)
+                                            document.getElementById(fieldName + element + "button").style.display = "none"
+                                        }}>{element}</Button>
+                            )
+                        }
+                        setRecs(array)
+                    }
+                }catch (e) {
+                    console.log(e)
+                    setRecs([<Button id={fieldName+fieldName+"button"}
+                                    key={fieldName+fieldName+"button"}
+                                    variant={"outline-info"}
+                                    className={"br-pill ma2"}
+                                    onClick={()=> {
+                                        appendText(fieldState, res.recommendations, setFieldState)
+                                        document.getElementById(fieldName+fieldName+"button").style.display = "none"
+                                    }}>{res.recommendations}</Button>])
+                }
+                setCost(cost => cost + res.cost)
+            }, error=>{setRecs([<p className={"red"}>Se ha producido un error en la generación de sugerencias</p>])})
+        }
+    }
+
+    const appendText = (text, newText, changeFunction) => {
+        if(text.length>0 && text[text.length-1]!=="\n"){
+            changeFunction(text => text + '\n')
+        }
+        changeFunction(text => text + newText + '\n')
+    }
+
     function populateDegreeOptions(json){
         let yrOp=[]
         let subOp=[]
@@ -691,6 +784,25 @@ export function CourseViewer(props) {
             </Modal.Header>
 
             <Modal.Body>
+
+                <div>
+                    {
+                        recsActive ?
+                            <p className={"green flex justify-end"}>Las sugerencias se generan si están indicados el nombre de la asignatura y el grado</p>
+                            : <></>
+                    }
+
+                    {edit ?
+                        <div className={"flex justify-end"}>
+                            <p className={"dib v-mid mh3"}>
+                                Generar sugerencias
+                            </p>
+                            <ReactSwitch checked={recsActive} onChange={setRecsActive}/>
+                        </div>
+
+                        :<></>}
+                </div>
+
                 <Form.Label className={invalidDegree ? "red" : ""}>Grado</Form.Label>
                 <Select
                         value={degree}
@@ -762,7 +874,9 @@ export function CourseViewer(props) {
                 <Form.Group className="mb-3 pv1" controlId="intlName">
                     <Form.Label>Nombre en inglés</Form.Label>
                     <Form.Control type="text" onChange={event => setIntlName(event.target.value)} required isInvalid={invalidIntlName}
+                                  onFocus={()=>getRecs("Nombre de la asignatura en inglés", recIntlName, setRecIntlName, intlName, setIntlName)}
                                   value={intlName} disabled={!edit}/>
+                    {recIntlName}
                     <Form.Control.Feedback type="invalid">
                         Nombre de la asignatura demasiado corto o contiene caracteres inválidos
                     </Form.Control.Feedback>
@@ -847,12 +961,18 @@ export function CourseViewer(props) {
 
                 <div className={"mt4 mb2 form-control"}>
                     <Form.Label className={invalidMinContents ? "red" : ""} >Descripción de contenidos mínimos</Form.Label>
-                    <TextEditor onChange={setMinContents} value={minContents} disabled={!edit} />
+                    <TextareaAutosize onChange={(e)=>setMinContents(e.target.value)} value={minContents} disabled={!edit} className={"w-100 form-control"}
+                                onFocus={()=>getRecs("Descripción de contenidos mínimos", recMinContents, setRecMinContents, minContents, setMinContents)}
+                    />
+                    {recMinContents}
                 </div>
 
                 <div className={"mt4 mb2 form-control"}>
                     <Form.Label className={invalidProgram ? "red" : ""}>Programa</Form.Label>
-                    <TextEditor onChange={setProgram} value={program}  disabled={!edit} />
+                    <TextareaAutosize onChange={(e)=>setProgram(e.target.value)} value={program} className={"w-100 form-control"}
+                                onFocus={()=>getRecs("Programa", recProgram, setRecProgram, program, setProgram)}
+                                disabled={!edit} />
+                    {recProgram}
                 </div>
 
                 <Accordion className={"mt4 mb4 form-control"} defaultActiveKey="0">
@@ -860,14 +980,30 @@ export function CourseViewer(props) {
                         <Accordion.Header>Competencias</Accordion.Header>
                         <Accordion.Body className={"bg-light-gray"}>
                             <div className={"bg-light-gray"}>
-                                <Form.Label className={invalidCompetencesBasic ? "red" : ""}>Básicas</Form.Label>
-                                <TextEditor onChange={setCompetencesBasic} value={competencesBasic} disabled={!edit} />
+                                <div className={"mv3"}>
+                                    <Form.Label className={invalidCompetencesBasic ? "red" : ""}>Básicas</Form.Label>
+                                    <TextareaAutosize onChange={(e)=>setCompetencesBasic(e.target.value)} value={competencesBasic} className={"w-100 form-control"}
+                                                onFocus={()=>getRecs("Competencias básicas", recCompetencesBasic, setRecCompetencesBasic, competencesBasic, setCompetencesBasic)}
+                                                disabled={!edit} />
+                                    {recCompetencesBasic}
+                                </div>
 
-                                <Form.Label className={invalidCompetencesGeneral ? "red" : ""}>Generales y transversales</Form.Label>
-                                <TextEditor onChange={setCompetencesGeneral} value={competencesGeneral} disabled={!edit} />
+                                <div className={"mv3"}>
+                                    <Form.Label className={invalidCompetencesGeneral ? "red" : ""}>Generales y transversales</Form.Label>
+                                    <TextareaAutosize onChange={(e)=>setCompetencesGeneral(e.target.value)} value={competencesGeneral} className={"w-100 form-control"}
+                                                onFocus={()=>getRecs("Competencias generales", recCompetencesGeneral, setRecCompetencesGeneral, competencesGeneral, setCompetencesGeneral)}
+                                                disabled={!edit} />
+                                    {recCompetencesGeneral}
+                                </div>
 
-                                <Form.Label className={invalidCompetencesSpecific ? "red" : ""}>Específicas</Form.Label>
-                                <TextEditor onChange={setCompetencesSpecific} value={competencesSpecific} disabled={!edit} />
+                                <div className={"mv3"}>
+                                    <Form.Label className={invalidCompetencesSpecific ? "red" : ""}>Específicas</Form.Label>
+                                    <TextareaAutosize onChange={(e)=>setCompetencesSpecific(e.target.value)} value={competencesSpecific} className={"w-100 form-control"}
+                                                onFocus={()=>getRecs("Competencias específicas", recCompetencesSpecific, setRecCompetencesSpecific, competencesSpecific, setCompetencesSpecific)}
+                                                disabled={!edit} />
+                                    {recCompetencesSpecific}
+                                </div>
+
                             </div>
                         </Accordion.Body>
                     </Accordion.Item>
@@ -876,17 +1012,24 @@ export function CourseViewer(props) {
                 <div className={"mt4 mb4 form-control"}>
                     <Form.Label className={invalidEvaluation ? "red" : ""}>Evaluación</Form.Label>
                     <TextareaAutosize value={evaluation} onChange={(e) => setEvaluation(e.target.value)}
-                                      className={"w-100 form-control"} disabled={!edit} ></TextareaAutosize>
+                                      className={"w-100 form-control"} disabled={!edit} onFocus={()=>getRecs("Evaluación", recEvaluation, setRecEvaluation, evaluation, setEvaluation)}></TextareaAutosize>
+                    {recEvaluation}
                 </div>
 
                 <div className={"mt4 mb4 form-control"}>
                     <Form.Label className={invalidResults ? "red" : ""}>Resultados de aprendizaje</Form.Label>
-                    <TextEditor value={results} onChange={setResults} className={"w-100 form-control"} disabled={!edit} ></TextEditor>
+                    <TextareaAutosize value={results} onChange={(e)=>setResults(e.target.value)} className={"w-100 form-control"}
+                                onFocus={()=>getRecs("Resultados de aprendizaje", recResults, setRecResults, results, setResults)}
+                                disabled={!edit} ></TextareaAutosize>
+                    {recResults}
                 </div>
 
                 <div className={"mt2 mb2 form-control"}>
                     <Form.Label className={invalidLiterature ? "red" : ""}>Bibliografía</Form.Label>
-                    <TextEditor value={literature} onChange={setLiterature} className={"h3"} disabled={!edit} />
+                    <TextareaAutosize value={literature} onChange={(e)=>setLiterature(e.target.value)} className={"w-100 form-control"}
+                                onFocus={()=>getRecs("Bibliografía", recLiterature, setRecLiterature, literature, setLiterature)}
+                                disabled={!edit} />
+                    {recLiterature}
                 </div>
 
             </Modal.Body>
@@ -897,6 +1040,13 @@ export function CourseViewer(props) {
                     <OverlayTrigger rootClose={true} trigger="click" placement="top" overlay={confirmEliminatePopover}>
                         <Button variant="danger" disabled={!enableDeleteButton} className={"mr-auto"} key={"delete"}>Eliminar</Button>
                     </OverlayTrigger>
+                }
+
+                {recsActive ?
+                    <div className={""}>
+                        Coste de las sugerencias: {Math.round(cost*10000)/10000} $
+                    </div>
+                    : <></>
                 }
 
 
