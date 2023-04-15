@@ -268,6 +268,7 @@ export function CourseViewer(props) {
         }
         readyModel.type = generateOption(model.type)
         //TODO: include evaluation
+        readyModel.evaluation = arrayStringify(model.evaluation)
         readyModel.minContents = arrayStringify(model.minContents)
         readyModel.program = arrayStringify(model.program)
         readyModel.results = arrayStringify(model.results)
@@ -323,14 +324,14 @@ export function CourseViewer(props) {
                     readyModel.coordinator = emptyModel.coordinator
                 }
 
-                if(res.module){
-                    readyModel.module = generateOptionWithValue(model.module, res.module.moduleID)
+                if(res.moduleID){
+                    readyModel.module = generateOptionWithValue(model.module, res.moduleID)
                 }else{
                     readyModel.module = generateOption(model.module)
                 }
 
-                if(res.subject){
-                    readyModel.subject = generateOptionWithValue(model.subject, res.subject.subjectID)
+                if(res.subjectID){
+                    readyModel.subject = generateOptionWithValue(model.subject, res.subjectID)
                 }else{
                     readyModel.subject = generateOption(model.subject)
                 }
@@ -566,7 +567,7 @@ export function CourseViewer(props) {
                 minContents: arrayRegenerate(minContents),
                 program: arrayRegenerate(program),
                 results: arrayRegenerate(results),
-                evaluation: evaluation,
+                evaluation: arrayRegenerate(evaluation),
                 literature: arrayRegenerate(literature),
                 competences: {
                     basic: arrayRegenerate(competencesBasic),
@@ -677,6 +678,7 @@ export function CourseViewer(props) {
                 })
             }).then(res => {
                 try{
+                    // eslint-disable-next-line
                     const regex = /\,(?!\s*?[\{\[\"\'\w])/g;
                     res.recommendations = res.recommendations.replace(regex, '');
                     const recommendations = JSON.parse(res.recommendations)
@@ -1007,8 +1009,9 @@ export function CourseViewer(props) {
 
                 <div className={"mt4 mb4 form-control"}>
                     <Form.Label className={invalidEvaluation ? "red" : ""}>Evaluación</Form.Label>
-                    <TextareaAutosize value={evaluation} onChange={(e) => setEvaluation(e.target.value)}
-                                      className={"w-100 form-control"} disabled={!edit} onFocus={()=>getRecs("Evaluación", recEvaluation, setRecEvaluation, evaluation, setEvaluation)}></TextareaAutosize>
+                    <TextareaAutosize value={evaluation} onChange={(e) => setEvaluation(e.target.value)} className={"w-100 form-control"}
+                                      onFocus={()=>getRecs("Evaluación", recEvaluation, setRecEvaluation, evaluation, setEvaluation)}
+                                      disabled={!edit} ></TextareaAutosize>
                     {recEvaluation}
                 </div>
 
@@ -1044,9 +1047,7 @@ export function CourseViewer(props) {
                     </div>
                     : <></>
                 }
-
-
-
+                
                 {edit ?
                     <Button variant="success" key={"confirm"} onClick={() => handleSubmit()}>Confirmar</Button> :
                     <Button variant="success" key={"confirm"} disabled={!enableEditButton} onClick={() => toggleEdit()}>Editar</Button>

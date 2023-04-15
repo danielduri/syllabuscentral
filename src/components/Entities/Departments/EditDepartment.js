@@ -30,18 +30,7 @@ export function EditDepartment(props) {
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify(data)
             }).then(resp => {
-                if(resp!==undefined){
-                    if(resp==="OK"){
-                        props.onHide();
-                        window.location.reload()
-                    }else if(resp==="used name"){
-                        setFeedback("Nombre ya utilizado")
-                    }else if(resp==="used shorthand"){
-                        setFeedback("Abreviatura ya utilizada")
-                    }else{
-                        setFeedback(resp)
-                    }
-                }
+                handleResp(resp)
             }).catch(error => {throw new Error(error)});
         }
 
@@ -73,15 +62,25 @@ export function EditDepartment(props) {
                     shorthand: shorthand
                 })
             }).then(resp => {
-                if(resp!==undefined){
-                    if(Number.isInteger(resp)){
-                        props.onHide();
-                        window.location.reload()
-                    }else{
-                        setWrongName(true)
-                    }
-                }
+                handleResp(resp)
             }).catch(error => {throw new Error(error)});
+        }
+    }
+
+    const handleResp = (resp)=>{
+        if(resp!==undefined){
+            if(resp==="OK"){
+                props.onHide();
+                window.location.reload()
+            }else if(resp==="used name"){
+                setWrongName(true)
+                setFeedback("Nombre ya utilizado")
+            }else if(resp==="used shorthand"){
+                setWrongShorthand(true)
+                setFeedback("Abreviatura ya utilizada")
+            }else{
+                setFeedback(resp)
+            }
         }
     }
 
@@ -176,9 +175,6 @@ export function EditDepartment(props) {
                     <div className={"w-100 mb-3"}>
                         <Form.Label>Nombre</Form.Label>
                         <Form.Control placeholder={props.department ? props.department.name : ""} onChange={event => setNewName(event.target.value)} required isInvalid={wrongName} />
-                        <Form.Control.Feedback type="invalid">
-                            {wrongName ? "Nombre inválido" : ""}
-                        </Form.Control.Feedback>
                     </div>
 
                     <div className={"mb-3"}>
@@ -187,9 +183,6 @@ export function EditDepartment(props) {
                                 <Form.Label className={""}>Abreviatura</Form.Label>
                                 <div className={"flex items-end w-15"}>
                                     <Form.Control placeholder={props.department ? props.department.shorthand : ""} onChange={event => setShorthand(event.target.value)} required isInvalid={wrongShorthand} />
-                                    <Form.Control.Feedback type="invalid">
-                                        Abreviatura demasiado larga o contiene caracteres inválidos
-                                    </Form.Control.Feedback>
                                 </div>
 
                             </div>

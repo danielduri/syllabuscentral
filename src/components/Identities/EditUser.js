@@ -99,7 +99,6 @@ export function EditUser(props) {
             setWrongNewPassword(true)
             upload=false
         }else{
-            //TODO check password strength
             setWrongNewPassword(false)
             if(newPassword!==newPassword2) {
                 setPasswordsNotMatch(true)
