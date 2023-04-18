@@ -25,28 +25,22 @@ function Users (){
                 let itemList = [];
                 for (let i = 0; i < data.length; i++) {
                     const item = data[i];
-                    itemList.push( <tr key={item.userID}>
+                    itemList.push( <tr className={"pointer"} key={item.userID} onClick={() => {
+                        setUserProp({
+                            userID: item.userID,
+                            userName: item.userName,
+                            email: item.email,
+                            userType: item.userType,
+                            departmentName: item.departmentName,
+                            departmentID: item.departmentID,
+                            isEditable: item.isEditable
+                        })
+                        setEdit(true);
+                    }}>
                         <td>{item.userName}</td>
                         <td>{item.email}</td>
                         <td>{displayUserType(item.userType)}</td>
                         <td>{item.departmentName}</td>
-
-                        <td>
-                            <div className={"ml-auto mr-auto"}>
-                                <Button variant={"primary"} key={item.userID}  onClick={() => {
-                                    setUserProp({
-                                        userID: item.userID,
-                                        userName: item.userName,
-                                        email: item.email,
-                                        userType: item.userType,
-                                        departmentName: item.departmentName,
-                                        departmentID: item.departmentID,
-                                        isEditable: item.isEditable
-                                    })
-                                    setEdit(true);
-                                }}>Editar</Button>
-                            </div>
-                        </td>
                     </tr>)
                 }
                 setList(itemList)
@@ -84,7 +78,6 @@ function Users (){
                             <th>Email</th>
                             <th>Tipo</th>
                             <th>Departamento</th>
-                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>

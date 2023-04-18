@@ -27,6 +27,26 @@ function ModulesSubjects (){
 
     const user = useSelector((state) => state.user);
 
+    const getModuleForEdit = (item) => {
+        setModule({
+            moduleID: item.moduleID,
+            moduleName: item.moduleName,
+            moduleDegree: item.moduleDegree,
+            moduleDegreeID: item.moduleDegreeID,
+        })
+        setEditModule(true);
+    }
+
+    const getSubjectForEdit = (item) => {
+        setSubject({
+            subjectID: item.subjectID,
+            subjectName: item.subjectName,
+            subjectDegree: item.subjectDegree,
+            subjectDegreeID: item.subjectDegreeID,
+        })
+        setEditSubject(true);
+    }
+
     const getList = () => {
         tokenFetch('getModules', {
             method: 'get',
@@ -47,22 +67,9 @@ function ModulesSubjects (){
                     const courses = listCourses(item.courses, setCourse, setCourseViewer)
 
                     itemList.push( <tr key={item.moduleID+"m"}>
-                        <td><h4><strong>{item.moduleName}</strong></h4><p>{item.moduleDegree}</p></td>
+                        <td className={"pointer"} onClick={()=>getModuleForEdit(item)}><h4><strong>{item.moduleName}</strong></h4><p>{item.moduleDegree}</p></td>
                         <td>
                             {courses}
-                        </td>
-                        <td>
-                            <div className={"ml-auto mr-auto"}>
-                                <Button variant={"secondary"} key={item.moduleID+"moduleButton"}  onClick={() => {
-                                    setModule({
-                                        moduleID: item.moduleID,
-                                        moduleName: item.moduleName,
-                                        moduleDegree: item.moduleDegree,
-                                        moduleDegreeID: item.moduleDegreeID,
-                                    })
-                                    setEditModule(true);
-                                }}>Editar</Button>
-                            </div>
                         </td>
                     </tr>)
                 }
@@ -91,22 +98,9 @@ function ModulesSubjects (){
                     const courses = listCourses(item.courses, setCourse, setCourseViewer)
 
                     itemList.push( <tr key={item.subjectID+"s"}>
-                        <td><h4><strong>{item.subjectName}</strong></h4><p>{item.subjectDegree}</p></td>
+                        <td className={"pointer"} onClick={()=>getSubjectForEdit(item)}><h4><strong>{item.subjectName}</strong></h4><p>{item.subjectDegree}</p></td>
                         <td>
                             {courses}
-                        </td>
-                        <td>
-                            <div className={"ml-auto mr-auto"}>
-                                <Button variant={"secondary"} key={item.subjectID+"subjectButton"}  onClick={() => {
-                                    setSubject({
-                                        subjectID: item.subjectID,
-                                        subjectName: item.subjectName,
-                                        subjectDegree: item.subjectDegree,
-                                        subjectDegreeID: item.subjectDegreeID,
-                                    })
-                                    setEditSubject(true);
-                                }}>Editar</Button>
-                            </div>
                         </td>
                     </tr>)
                 }
@@ -155,7 +149,6 @@ function ModulesSubjects (){
                         <tr key={"moduleHeader"}>
                             <th>Módulo</th>
                             <th>Asignaturas</th>
-                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -170,7 +163,6 @@ function ModulesSubjects (){
                         <tr key={"subjectHeader"}>
                             <th>Materia</th>
                             <th>Asignaturas</th>
-                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>

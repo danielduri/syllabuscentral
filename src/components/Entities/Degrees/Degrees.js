@@ -24,7 +24,16 @@ function Degrees (){
                 let itemList = [];
                 for (let i = 0; i < data.length; i++) {
                     const item = data[i];
-                    itemList.push( <tr key={item.degreeID}>
+                    itemList.push( <tr key={item.degreeID} className={"pointer"} onClick={() => {
+                        setDegree({
+                            name: item.name,
+                            duration: item.duration,
+                            degreeID: item.degreeID,
+                            coordinator: item.coordinator,
+                            coordinatorID: item.coordinatorID
+                        })
+                        setEdit(true);
+                    }} >
                         <td>{item.name}</td>
                         <td>
                             {item.courses} asignatura(s) <br/>
@@ -34,20 +43,6 @@ function Degrees (){
                         </td>
                         <td>{item.duration} años</td>
                         <td>{item.coordinator}</td>
-                        <td>
-                            <div className={"ml-auto mr-auto"}>
-                                <Button variant={"info"} key={item.degreeID+"b"}  onClick={() => {
-                                    setDegree({
-                                        name: item.name,
-                                        duration: item.duration,
-                                        degreeID: item.degreeID,
-                                        coordinator: item.coordinator,
-                                        coordinatorID: item.coordinatorID
-                                    })
-                                    setEdit(true);
-                                }}>Editar</Button>
-                            </div>
-                        </td>
                     </tr>)
                 }
                 setList(itemList)
@@ -85,7 +80,6 @@ function Degrees (){
                             <th>Estadísticas</th>
                             <th>Duración</th>
                             <th>Coordinador</th>
-                            <th>Editar</th>
                         </tr>
                         </thead>
                         <tbody>

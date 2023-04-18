@@ -16,7 +16,7 @@ export const listCourses = (courseList, setCourse, setCourseViewer) => {
         courses.push(
             <div key={course.courseid+"course"}>
                 <li
-                    className={"blue underline"} onClick={()=>{
+                    className={"blue underline pointer"} onClick={()=>{
                     tokenFetch(`getModel?courseid=${course.courseid}`, {
                         method: 'get',
                         headers: {"Content-type": "application/json"},
@@ -31,4 +31,20 @@ export const listCourses = (courseList, setCourse, setCourseViewer) => {
     }
 
     return courses
+}
+
+export const listUsers = (userList, setUser, setEditUser) => {
+    let users = []
+
+    for (const user of userList) {
+        users.push(
+            <li className={"blue underline pointer bold"} key={user.userID+"member"}
+            onClick={() => {
+                setUser(user);
+                setEditUser(true);
+            }}>{user.userName}</li>
+        )
+    }
+
+    return users
 }

@@ -20,6 +20,16 @@ function Departments (){
 
     const user = useSelector((state) => state.user);
 
+    const getDepartmentForEdit = (item) => {
+        setDepartment({
+            shorthand: item.shorthand,
+            name: item.department,
+            departmentID: item.departmentID,
+            headcount: item.members.length
+        })
+        setEditDepartment(true);
+    }
+
     const getList = () => {
         tokenFetch('getDepartments', {
             method: 'get',
@@ -42,23 +52,10 @@ function Departments (){
                     }
 
                     itemList.push( <tr key={item.departmentID}>
-                        <td>{item.shorthand}</td>
-                        <td>{item.department}</td>
+                        <td className={"pointer"} onClick={()=>getDepartmentForEdit(item)}>{item.shorthand}</td>
+                        <td className={"pointer"} onClick={()=>getDepartmentForEdit(item)}>{item.department}</td>
                         <td key={item.departmentID+"c"}><ul key={item.departmentID+"cl"}>{courses}</ul></td>
-                        <td key={item.departmentID+"m"}><ul key={item.departmentID+"ml"}>{members}</ul></td>
-                        <td>
-                            <div className={"ml-auto mr-auto"}>
-                                <Button variant={"warning"} key={item.departmentID+"b"}  onClick={() => {
-                                    setDepartment({
-                                        shorthand: item.shorthand,
-                                        name: item.department,
-                                        departmentID: item.departmentID,
-                                        headcount: item.members.length
-                                    })
-                                    setEditDepartment(true);
-                                }}>Editar</Button>
-                            </div>
-                        </td>
+                        <td  className={"pointer"} onClick={()=>getDepartmentForEdit(item)} key={item.departmentID+"m"}><ul key={item.departmentID+"ml"}>{members}</ul></td>
                     </tr>)
                 }
                 setList(itemList)
@@ -97,7 +94,6 @@ function Departments (){
                             <th>Departamento</th>
                             <th>Asignaturas</th>
                             <th>Miembros</th>
-                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>

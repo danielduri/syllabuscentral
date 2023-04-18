@@ -15,6 +15,15 @@ function Schools (){
 
     const user = useSelector((state) => state.user);
 
+    const getSchoolForEdit  = (item) => {
+        setSchool({
+            schoolName: item.schoolName,
+            schoolID: item.schoolID,
+            schoolAdm: item.schoolAdm
+        })
+        setEdit(true);
+    }
+
     const getList = () => {
         tokenFetch('getSchools', {
             method: 'get',
@@ -25,8 +34,8 @@ function Schools (){
                 for (let i = 0; i < data.length; i++) {
                     const item = data[i];
                     itemList.push( <tr key={item.schoolID}>
-                        <td>{item.schoolName}</td>
-                        <td>
+                        <td className={"pointer"} onClick={()=>getSchoolForEdit(item)}>{item.schoolName}</td>
+                        <td className={"pointer"} onClick={()=>getSchoolForEdit(item)}>
                             {item.degreeCount} grado(s) <br/>
                             {item.courseCount} asignatura(s) <br/>
                             {item.departmentCount} departamento(s) <br/>
@@ -34,15 +43,6 @@ function Schools (){
                         </td>
                         <td>
                             <div>
-                                <Button variant={"dark"} key={item.schoolID+"edit"} className={"mh1"} onClick={() => {
-                                    setSchool({
-                                        schoolName: item.schoolName,
-                                        schoolID: item.schoolID,
-                                        schoolAdm: item.schoolAdm
-                                    })
-                                    setEdit(true);
-                                }}>Editar</Button>
-
                                 <Button variant={"primary"} key={item.schoolID+"switch"} className={"mh1"} onClick={() => {
                                     tokenFetch('switchSchool', {
                                         method: 'put',
