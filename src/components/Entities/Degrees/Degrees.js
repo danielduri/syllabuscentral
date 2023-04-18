@@ -27,7 +27,7 @@ function Degrees (){
                     itemList.push( <tr key={item.degreeID}>
                         <td>{item.name}</td>
                         <td>
-                            {item.subjects} asignatura(s) <br/>
+                            {item.courses} asignatura(s) <br/>
                             {item.modules} módulo(s) <br/>
                             {item.subjects} materia(s) <br/>
                             {item.ECTS} ECTS <br/>
