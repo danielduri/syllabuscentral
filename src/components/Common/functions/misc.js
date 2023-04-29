@@ -43,6 +43,9 @@ export const validateShorthand = (sh) => {
 
 export const validateCode = (c) => {
     if(c!==""){
+        if(Number.parseInt(c)<=0){
+            return false;
+        }
         return !/\D/.test(c);
     }else{
         return true
