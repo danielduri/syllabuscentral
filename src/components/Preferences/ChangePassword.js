@@ -76,7 +76,7 @@ export function ChangePassword(props) {
             </Modal.Header>
 
             <Modal.Body>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form noValidate validated={validated}>
 
                     <Form.Group className="mb-3" controlId="oldPassword">
                         <Form.Label>Contraseña</Form.Label>
@@ -102,15 +102,12 @@ export function ChangePassword(props) {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                        Cambiar
-                    </Button>
-
                 </Form>
             </Modal.Body>
 
             <Modal.Footer>
-                <Button onClick={props.onHide}>Cancelar</Button>
+                <Button variant={"primary"} onClick={handleSubmit}>Cambiar</Button>
+                <Button variant={"danger"} onClick={props.onHide}>Cancelar</Button>
             </Modal.Footer>
 
         </Modal>

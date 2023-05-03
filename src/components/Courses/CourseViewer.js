@@ -20,7 +20,7 @@ export function CourseViewer(props) {
     //region state declarations
     const modalRef = useRef();
 
-    const [edit, setEdit]=useState(false)
+    const [edit, setEdit] = useState(false)
 
     /*
     in view, all fields are disabled and has props.model
@@ -130,31 +130,31 @@ export function CourseViewer(props) {
 
     //region useEffect hooks
 
-    useEffect( () => {
+    useEffect(() => {
         init();
     }, [props.show])
 
-    useEffect(()=>{
-        if (validateCode(code)){
+    useEffect(() => {
+        if (validateCode(code)) {
             setInvalidCode(false)
-        }else{
+        } else {
             setInvalidCode(true)
         }
-    },[code])
+    }, [code])
 
-    useEffect(()=>{
-        if (validateShorthand(shorthand)){
+    useEffect(() => {
+        if (validateShorthand(shorthand)) {
             setInvalidShorthand(false)
-        }else {
+        } else {
             setInvalidShorthand(true)
         }
-    },[shorthand])
+    }, [shorthand])
     //endregion
 
-    const user = useSelector ((state) => state.user)
+    const user = useSelector((state) => state.user)
 
     const scrollToTop = () => {
-        modalRef.current?.scrollIntoView({ block:'nearest', behavior:'smooth' });
+        modalRef.current?.scrollIntoView({block: 'nearest', behavior: 'smooth'});
     }
 
     function clearFeedback() {
@@ -200,18 +200,19 @@ export function CourseViewer(props) {
         if (props.show) {
             clearFeedback();
             clearRecommendations();
-            if(props.mode==="create"){
+            if (props.mode === "create") {
                 setEdit(true)
                 setRecsActive(true)
                 setCodeIsEditable(true)
                 loadData(true).then(r => null)
-            }else if(props.mode==="edit"){
+            } else if (props.mode === "edit") {
                 setEdit(true)
                 setRecsActive(true)
                 loadData(true).then(r => null)
-            }else if(props.mode==="copy" || props.mode==="validate"){
+            } else if (props.mode === "copy" || props.mode === "validate") {
                 setEdit(true)
-                loadData(true).then(() => {})
+                loadData(true).then(() => {
+                })
                 setCodeIsEditable(true)
             } else {
                 setEdit(false)
@@ -227,7 +228,7 @@ export function CourseViewer(props) {
         })
     }
 
-    async function loadData(editing){
+    async function loadData(editing) {
         let degOp = []
         let depOp = []
 
@@ -284,13 +285,13 @@ export function CourseViewer(props) {
         //readyModel.competences.general = arrayStringify(comp.general)
         //readyModel.competences.specific = arrayStringify(comp.specific)
 
-        if(!editing){
-            readyModel.degree=generateOption(model.degree)
-            readyModel.department=generateOption(model.department)
-            readyModel.module=generateOption(model.module)
-            readyModel.subject=generateOption(model.subject)
-            readyModel.coordinator=generateOption(model.coordinator)
-        }else{
+        if (!editing) {
+            readyModel.degree = generateOption(model.degree)
+            readyModel.department = generateOption(model.department)
+            readyModel.module = generateOption(model.module)
+            readyModel.subject = generateOption(model.subject)
+            readyModel.coordinator = generateOption(model.coordinator)
+        } else {
             await tokenFetch('modelViewer', {
                 method: 'put',
                 headers: {"Content-type": "application/json"},
@@ -304,35 +305,35 @@ export function CourseViewer(props) {
 
                 })
             }).then(res => {
-                if(res.degree){
+                if (res.degree) {
                     readyModel.degree = generateOptionWithValue(res.degree.degreeDisplayName, res.degree.degreeID)
                     populateDegreeOptions(res)
-                }else{
+                } else {
                     readyModel.degree = emptyModel.degree
                 }
 
-                if(res.department){
+                if (res.department) {
                     readyModel.department = generateOptionWithValue(model.department, res.department)
                     populateDepartmentUsers(res)
-                }else{
+                } else {
                     readyModel.department = emptyModel.department
                 }
 
-                if(res.coordinator){
+                if (res.coordinator) {
                     readyModel.coordinator = generateOptionWithValue(model.coordinator, res.coordinator.userID)
-                }else{
+                } else {
                     readyModel.coordinator = emptyModel.coordinator
                 }
 
-                if(res.moduleID){
+                if (res.moduleID) {
                     readyModel.module = generateOptionWithValue(model.module, res.moduleID)
-                }else{
+                } else {
                     readyModel.module = generateOption(model.module)
                 }
 
-                if(res.subjectID){
+                if (res.subjectID) {
                     readyModel.subject = generateOptionWithValue(model.subject, res.subjectID)
-                }else{
+                } else {
                     readyModel.subject = generateOption(model.subject)
                 }
 
@@ -367,180 +368,180 @@ export function CourseViewer(props) {
         setCompetencesBasic(model.competences.basic)
         setCompetencesGeneral(model.competences.general)
         setCompetencesSpecific(model.competences.specific)
-        if(props.mode==="copy"){
+        if (props.mode === "copy") {
             setDegree(emptyModel.degree)
             setYear(emptyModel.degree)
             setCode(emptyModel.degree)
             setModule(emptyModel.module)
             setSubject(emptyModel.subject)
-        }else{
+        } else {
             setDegree(model.degree)
             setYear(model.year)
             setCode(model.code)
             setModule(model.module)
             setSubject(model.subject)
         }
-        if(user.userInfo.userType>=1 || model.coordinator.label===user.userInfo.userName){
+        if (user.userInfo.userType >= 1 || model.coordinator.label === user.userInfo.userName) {
             setEnableEditButton(true);
             setEnableDeleteButton(true);
         }
     }
 
-    function validateForm(){
+    function validateForm() {
 
-        let submit=true
+        let submit = true
 
-        if(degree===null || degree===undefined || degree.value===null || !Number.isInteger(degree.value)){
+        if (degree === null || degree === undefined || degree.value === null || !Number.isInteger(degree.value)) {
             setInvalidDegree(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidDegree(false)
         }
 
-        if(year===null || year===undefined || year.value===null || !Number.isInteger(year.value)){
+        if (year === null || year === undefined || year.value === null || !Number.isInteger(year.value)) {
             setInvalidYears(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidYears(false)
         }
 
-        if(period===null || period===undefined || period.value===null || !Number.isInteger(period.value)){
+        if (period === null || period === undefined || period.value === null || !Number.isInteger(period.value)) {
             setInvalidPeriod(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidPeriod(false)
         }
 
-        if(language===null || language===undefined || language.value===null || language.value===""){
+        if (language === null || language === undefined || language.value === null || language.value === "") {
             setInvalidLanguage(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidLanguage(false)
         }
 
-        if(code==="" || !Number.parseInt(code) || !validateCode(code)){
+        if (code === "" || !Number.parseInt(code) || !validateCode(code)) {
             setInvalidCode(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidCode(false)
         }
 
-        if(courseName===undefined || courseName===""){
+        if (courseName === undefined || courseName === "") {
             setInvalidCourseName(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidCourseName(false)
         }
 
-        if(intlName===undefined || intlName===""){
+        if (intlName === undefined || intlName === "") {
             setInvalidIntlName(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidIntlName(false)
         }
 
-        if(shorthand===undefined || shorthand==="" || !validateShorthand(shorthand)){
+        if (shorthand === undefined || shorthand === "" || !validateShorthand(shorthand)) {
             setInvalidShorthand(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidShorthand(false)
         }
 
-        if(type===null || type===undefined || type.value===""){
+        if (type === null || type === undefined || type.value === "") {
             setInvalidType(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidType(false)
         }
 
-        if(ECTS===null || ECTS===undefined || !Number.parseFloat(ECTS.value)){
+        if (ECTS === null || ECTS === undefined || !Number.parseFloat(ECTS.value)) {
             setInvalidECTS(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidECTS(false)
         }
 
-        if(subject===null || subject===undefined || subject.value===""){
+        if (subject === null || subject === undefined || subject.value === "") {
             setInvalidSubject(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidSubject(false)
         }
 
-        if(module===null || module===undefined || module.value===""){
+        if (module === null || module === undefined || module.value === "") {
             setInvalidModule(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidModule(false)
         }
 
-        if(department===null || department===undefined || !Number.isInteger(department.value)){
+        if (department === null || department === undefined || !Number.isInteger(department.value)) {
             setInvalidDepartment(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidDepartment(false)
         }
 
-        if(coordinator===null || coordinator===undefined || !Number.isInteger(coordinator.value)){
+        if (coordinator === null || coordinator === undefined || !Number.isInteger(coordinator.value)) {
             setInvalidCoordinator(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidCoordinator(false)
         }
 
-        if(minContents===undefined || !minContents.trim()){
+        if (minContents === undefined || !minContents.trim()) {
             setInvalidMinContents(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidMinContents(false)
         }
 
-        if(program===undefined || !program.trim()){
+        if (program === undefined || !program.trim()) {
             setInvalidProgram(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidProgram(false)
         }
 
-        if(results===undefined || !results.trim()){
+        if (results === undefined || !results.trim()) {
             setInvalidResults(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidResults(false)
         }
 
-        if(evaluation===undefined || !evaluation.trim()){
+        if (evaluation === undefined || !evaluation.trim()) {
             setInvalidEvaluation(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidEvaluation(false)
         }
 
-        if(literature===undefined || !literature.trim()){
+        if (literature === undefined || !literature.trim()) {
             setInvalidLiterature(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidLiterature(false)
         }
 
-        if(competencesBasic===undefined || !competencesBasic.trim()){
+        if (competencesBasic === undefined || !competencesBasic.trim()) {
             setInvalidCompetencesBasic(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidCompetencesBasic(false)
         }
 
-        if(competencesGeneral===undefined || !competencesGeneral.trim()){
+        if (competencesGeneral === undefined || !competencesGeneral.trim()) {
             setInvalidCompetencesGeneral(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidCompetencesGeneral(false)
         }
 
-        if(competencesSpecific===undefined || !competencesSpecific.trim()){
+        if (competencesSpecific === undefined || !competencesSpecific.trim()) {
             setInvalidCompetencesSpecific(true)
-            submit=false
-        }else{
+            submit = false
+        } else {
             setInvalidCompetencesSpecific(false)
         }
 
@@ -548,7 +549,7 @@ export function CourseViewer(props) {
     }
 
     const handleSubmit = () => {
-        if(validateForm()){
+        if (validateForm()) {
             const newModel = {
                 degree: degree.value,
                 year: year.value,
@@ -576,7 +577,7 @@ export function CourseViewer(props) {
                 }
             }
 
-            if(props.model===undefined || props.mode==="copy" || props.mode==="validate"){
+            if (props.model === undefined || props.mode === "copy" || props.mode === "validate") {
                 tokenFetch('newModel', {
                     method: 'post',
                     headers: {"Content-type": "application/json"},
@@ -586,7 +587,7 @@ export function CourseViewer(props) {
                 }).then(resp => {
                     handleResponse(resp)
                 })
-            }else{
+            } else {
                 tokenFetch('editModel', {
                     method: 'put',
                     headers: {"Content-type": "application/json"},
@@ -598,7 +599,7 @@ export function CourseViewer(props) {
                 })
             }
 
-        }else{
+        } else {
             scrollToTop();
         }
 
@@ -649,11 +650,11 @@ export function CourseViewer(props) {
         })
     }
 
-    function handleResponse(resp){
-        if(resp==="OK"){
+    function handleResponse(resp) {
+        if (resp === "OK") {
             props.onHide();
             window.location.reload()
-        }else{
+        } else {
             setInvalidCode(true);
             setCodeFeedback(`Error: ${resp}`)
             scrollToTop();
@@ -661,11 +662,11 @@ export function CourseViewer(props) {
     }
 
     const getRecs = (fieldName, recs, setRecs, fieldState, setFieldState) => {
-        if(recs.length===0 && courseName!=="" && courseName!==undefined && degree.label!==""
-            && degree.label!==undefined && fieldName!=="" && fieldName!==undefined && edit && recsActive){
+        if (recs.length === 0 && courseName !== "" && courseName !== undefined && degree.label !== ""
+            && degree.label !== undefined && fieldName !== "" && fieldName !== undefined && edit && recsActive) {
 
-            setRecs(<div className={"ma3"}> <Spinner animation="border" variant="success"/>
-                <p className={"dib v-mid mh3"}> Generando sugerencias...</p> </div>)
+            setRecs(<div className={"ma3"}><Spinner animation="border" variant="success"/>
+                <p className={"dib v-mid mh3"}> Generando sugerencias...</p></div>)
 
             tokenFetch("recommendations", {
                 method: "post",
@@ -677,12 +678,12 @@ export function CourseViewer(props) {
                     "completion": fieldState
                 })
             }).then(res => {
-                try{
+                try {
                     // eslint-disable-next-line
                     const regex = /\,(?!\s*?[\{\[\"\'\w])/g;
                     res.recommendations = res.recommendations.replace(regex, '');
                     const recommendations = JSON.parse(res.recommendations)
-                    if(Array.isArray(recommendations)) {
+                    if (Array.isArray(recommendations)) {
                         let array = []
                         for (const element of recommendations) {
                             array.push(
@@ -698,33 +699,35 @@ export function CourseViewer(props) {
                         }
                         setRecs(array)
                     }
-                }catch (e) {
+                } catch (e) {
                     console.log(e)
-                    setRecs([<Button id={fieldName+fieldName+"button"}
-                                    key={fieldName+fieldName+"button"}
-                                    variant={"outline-info"}
-                                    className={"br-pill ma2"}
-                                    onClick={()=> {
-                                        appendText(fieldState, res.recommendations, setFieldState)
-                                        document.getElementById(fieldName+fieldName+"button").style.display = "none"
-                                    }}>{res.recommendations}</Button>])
+                    setRecs([<Button id={fieldName + fieldName + "button"}
+                                     key={fieldName + fieldName + "button"}
+                                     variant={"outline-info"}
+                                     className={"br-pill ma2"}
+                                     onClick={() => {
+                                         appendText(fieldState, res.recommendations, setFieldState)
+                                         document.getElementById(fieldName + fieldName + "button").style.display = "none"
+                                     }}>{res.recommendations}</Button>])
                 }
                 setCost(cost => cost + res.cost)
-            }, error=>{setRecs([<p className={"red"}>Se ha producido un error en la generación de sugerencias</p>])})
+            }, error => {
+                setRecs([<p className={"red"}>Se ha producido un error en la generación de sugerencias</p>])
+            })
         }
     }
 
     const appendText = (text, newText, changeFunction) => {
-        if(text.length>0 && text[text.length-1]!=="\n"){
+        if (text.length > 0 && text[text.length - 1] !== "\n") {
             changeFunction(text => text + '\n')
         }
         changeFunction(text => text + newText + '\n')
     }
 
-    function populateDegreeOptions(json){
-        let yrOp=[]
-        let subOp=[]
-        let modOp=[]
+    function populateDegreeOptions(json) {
+        let yrOp = []
+        let subOp = []
+        let modOp = []
 
         for (let i = 1; i <= json.duration; i++) {
             yrOp.push(generateOptionWithValue(`${i}º`, i))
@@ -741,8 +744,8 @@ export function CourseViewer(props) {
         setModuleOptions(modOp)
     }
 
-    function populateDepartmentUsers(json){
-        let coordOp=[]
+    function populateDepartmentUsers(json) {
+        let coordOp = []
         for (const resElement of json.coordinators) {
             coordOp.push(generateOptionWithValue(resElement.userName, resElement.userID))
         }
@@ -755,7 +758,7 @@ export function CourseViewer(props) {
             <Popover.Header as="h3">Confirmación</Popover.Header>
             <Popover.Body>
                 Esta acción es irreversible. ¿Seguro que desea eliminar este modelo?
-                <h3> </h3>
+                <h3></h3>
                 <Button className={"w-100"} variant={"danger"} onClick={() => handleDelete(code)}>Sí, seguro</Button>
             </Popover.Body>
         </Popover>
@@ -773,36 +776,37 @@ export function CourseViewer(props) {
         >
 
             <Form>
-            <Modal.Header closeButton className={"h-auto"}>
-                <div ref={modalRef}>
-                <Modal.Title id="contained-modal-title-vcenter" className={"h-auto"}>
-                    <h3 className={"h-auto"}> Guía docente </h3>
-                </Modal.Title>
-                </div>
-            </Modal.Header>
+                <Modal.Header closeButton className={"h-auto"}>
+                    <div ref={modalRef}>
+                        <Modal.Title id="contained-modal-title-vcenter" className={"h-auto"}>
+                            <h3 className={"h-auto"}> Guía docente </h3>
+                        </Modal.Title>
+                    </div>
+                </Modal.Header>
 
-            <Modal.Body>
+                <Modal.Body>
 
-                <div>
-                    {
-                        recsActive ?
-                            <p className={"green flex justify-end"}>Las sugerencias se generan si están indicados el nombre de la asignatura y el grado</p>
-                            : <></>
-                    }
+                    <div>
+                        {
+                            recsActive ?
+                                <p className={"green flex justify-end"}>Las sugerencias se generan si están indicados el
+                                    nombre de la asignatura y el grado</p>
+                                : <></>
+                        }
 
-                    {edit ?
-                        <div className={"flex justify-end"}>
-                            <p className={"dib v-mid mh3"}>
-                                Generar sugerencias
-                            </p>
-                            <ReactSwitch checked={recsActive} onChange={setRecsActive}/>
-                        </div>
+                        {edit ?
+                            <div className={"flex justify-end"}>
+                                <p className={"dib v-mid mh3"}>
+                                    Generar sugerencias
+                                </p>
+                                <ReactSwitch checked={recsActive} onChange={setRecsActive}/>
+                            </div>
 
-                        :<></>}
-                </div>
+                            : <></>}
+                    </div>
 
-                <Form.Label className={invalidDegree ? "red" : ""}>Grado</Form.Label>
-                <Select
+                    <Form.Label className={invalidDegree ? "red" : ""}>Grado</Form.Label>
+                    <Select
                         value={degree}
                         placeholder={"Grado"}
                         options={degreeOptions}
@@ -810,252 +814,272 @@ export function CourseViewer(props) {
                         isSearchable={false}
                         onChange={handleDegreeChange}
                         isDisabled={!edit}
-                />
+                    />
 
-                <div className={"flex items-end"}>
+                    <div className={"flex items-end"}>
 
 
-                    <Form.Group className="w-25 tl pa2" controlId="year">
-                        <Form.Label className={invalidYears ? "red" : ""}>Curso</Form.Label>
-                        <Select
+                        <Form.Group className="w-25 tl pa2" controlId="year">
+                            <Form.Label className={invalidYears ? "red" : ""}>Curso</Form.Label>
+                            <Select
                                 isDisabled={!edit}
                                 isSearchable={false}
                                 placeholder={"Año"}
                                 options={yearOptions}
                                 onChange={setYear}
                                 value={year}
-                        />
-                    </Form.Group>
+                            />
+                        </Form.Group>
 
-                    <Form.Group className="w-25 tl pa2" controlId="period">
-                        <Form.Label className={invalidPeriod ? "red" : ""}>Cuatrimestre</Form.Label>
-                        <Select
+                        <Form.Group className="w-25 tl pa2" controlId="period">
+                            <Form.Label className={invalidPeriod ? "red" : ""}>Cuatrimestre</Form.Label>
+                            <Select
                                 isSearchable={false}
                                 placeholder={"Periodo"}
                                 options={periodOptions}
                                 onChange={setPeriod}
                                 value={period}
                                 isDisabled={!edit}
-                        />
-                    </Form.Group>
+                            />
+                        </Form.Group>
 
-                    <Form.Group className="w-25 tl pa2" controlId="language">
-                        <Form.Label className={invalidLanguage ? "red" : ""}>Idioma</Form.Label>
-                        <CreatableSelect
-                            placeholder={"Idioma"}
-                            options={languageOptions}
-                            onChange={setLanguage}
-                            value={language}
-                            isDisabled={!edit}
-                        />
-                    </Form.Group>
+                        <Form.Group className="w-25 tl pa2" controlId="language">
+                            <Form.Label className={invalidLanguage ? "red" : ""}>Idioma</Form.Label>
+                            <CreatableSelect
+                                placeholder={"Idioma"}
+                                options={languageOptions}
+                                onChange={setLanguage}
+                                value={language}
+                                isDisabled={!edit}
+                            />
+                        </Form.Group>
 
-                    <Form.Group className="w-25 tl pa2" controlId="code">
-                        <Form.Label>Código</Form.Label>
-                        <Form.Control type="text" onChange={event => setCode(event.target.value)} required isInvalid={invalidCode}
-                                      value={code} disabled={!codeIsEditable} />
-                        <Form.Control.Feedback type="invalid">
-                            {codeFeedback}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </div>
-
-                <Form.Group className="mb-3 pv1" controlId="courseName">
-                    <Form.Label>Nombre de la asignatura</Form.Label>
-                    <Form.Control type="text" onChange={event => setCourseName(event.target.value)} required isInvalid={invalidCourseName}
-                                  value={courseName} disabled={!edit}/>
-                    <Form.Control.Feedback type="invalid">
-                        Nombre de la asignatura demasiado corto o contiene caracteres inválidos
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3 pv1" controlId="intlName">
-                    <Form.Label>Nombre en inglés</Form.Label>
-                    <Form.Control type="text" onChange={event => setIntlName(event.target.value)} required isInvalid={invalidIntlName}
-                                  onFocus={()=>getRecs("Nombre de la asignatura en inglés", recIntlName, setRecIntlName, intlName, setIntlName)}
-                                  value={intlName} disabled={!edit}/>
-                    {recIntlName}
-                    <Form.Control.Feedback type="invalid">
-                        Nombre de la asignatura demasiado corto o contiene caracteres inválidos
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <div className={"flex items-end"}>
-                    <Form.Group className="mb-3 pv1 w-25" controlId="shorthand">
-                        <Form.Label>Abreviatura</Form.Label>
-                        <Form.Control type="text" onChange={event => setShorthand(event.target.value)} required isInvalid={invalidShorthand}
-                                      value={shorthand} disabled={!edit} />
-                        <Form.Control.Feedback type="invalid">
-                            Abreviatura demasiado larga o corta. 2-5 caracteres.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3 pv1 w-75 ph3" controlId="subject">
-                        <Form.Label className={invalidSubject ? "red" : ""}>Materia</Form.Label>
-                        <CreatableSelect
-                            placeholder={"Selecciona..."}
-                            options={subjectOptions}
-                            isDisabled={!edit || subjectOptions===[]}
-                            className={"tl"}
-                            onChange={setSubject}
-                            value={subject}
-                        />
-                    </Form.Group>
-                </div>
-
-                <div className={"flex items-end"}>
-
-                    <Form.Group className="mb-3 pv1 w-75" controlId="type">
-                        <Form.Label className={invalidType ? "red" : ""}>Tipo</Form.Label>
-                        <Select
-                            placeholder={"Selecciona..."}
-                            options={typeOptions}
-                            className={"tl"}
-                            onChange={setType}
-                            value={type}
-                            isDisabled={!edit}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3 pv1 w-25 ph3" controlId="ECTS">
-                        <Form.Label className={invalidECTS ? "red" : ""}>ECTS</Form.Label>
-                        <Select
-                            options={ECTSoptions}
-                            className={"tl"}
-                            onChange={setECTS}
-                            isSearchable={false}
-                            value={ECTS}
-                            isDisabled={!edit}
-                        />
-                    </Form.Group>
-                </div>
-
-                <Form.Label className={invalidModule ? "red" : ""}>Módulo</Form.Label>
-                <CreatableSelect
-                    options={moduleOptions}
-                    className={"tl pa2"}
-                    onChange={setModule}
-                    isDisabled={!edit || moduleOptions===[]}
-                    value={module}
-                />
-
-                <Form.Label className={invalidDepartment ? "red" : ""}>Departamento</Form.Label>
-                <Select
-                    options={departmentOptions}
-                    className={"tl pa2"}
-                    onChange={handleDepartmentChange}
-                    value={department}
-                    isDisabled={!edit}
-                />
-
-                <Form.Label className={invalidCoordinator ? "red" : ""}>Coordinador</Form.Label>
-                <Select
-                    isDisabled={!edit || department===""}
-                    options={coordinatorOptions}
-                    className={"tl pa2"}
-                    onChange={setCoordinator}
-                    value={coordinator}
-                />
-
-                <div className={"mt4 mb2 form-control"}>
-                    <Form.Label className={invalidMinContents ? "red" : ""} >Descripción de contenidos mínimos</Form.Label>
-                    <TextareaAutosize onChange={(e)=>setMinContents(e.target.value)} value={minContents} disabled={!edit} className={"w-100 form-control"}
-                                onFocus={()=>getRecs("Descripción de contenidos mínimos", recMinContents, setRecMinContents, minContents, setMinContents)}
-                    />
-                    {recMinContents}
-                </div>
-
-                <div className={"mt4 mb2 form-control"}>
-                    <Form.Label className={invalidProgram ? "red" : ""}>Programa</Form.Label>
-                    <TextareaAutosize onChange={(e)=>setProgram(e.target.value)} value={program} className={"w-100 form-control"}
-                                onFocus={()=>getRecs("Programa", recProgram, setRecProgram, program, setProgram)}
-                                disabled={!edit} />
-                    {recProgram}
-                </div>
-
-                <Accordion className={"mt4 mb4 form-control"} defaultActiveKey="0">
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header>Competencias</Accordion.Header>
-                        <Accordion.Body className={"bg-light-gray"}>
-                            <div className={"bg-light-gray"}>
-                                <div className={"mv3"}>
-                                    <Form.Label className={invalidCompetencesBasic ? "red" : ""}>Básicas</Form.Label>
-                                    <TextareaAutosize onChange={(e)=>setCompetencesBasic(e.target.value)} value={competencesBasic} className={"w-100 form-control"}
-                                                onFocus={()=>getRecs("Competencias básicas", recCompetencesBasic, setRecCompetencesBasic, competencesBasic, setCompetencesBasic)}
-                                                disabled={!edit} />
-                                    {recCompetencesBasic}
-                                </div>
-
-                                <div className={"mv3"}>
-                                    <Form.Label className={invalidCompetencesGeneral ? "red" : ""}>Generales y transversales</Form.Label>
-                                    <TextareaAutosize onChange={(e)=>setCompetencesGeneral(e.target.value)} value={competencesGeneral} className={"w-100 form-control"}
-                                                onFocus={()=>getRecs("Competencias generales", recCompetencesGeneral, setRecCompetencesGeneral, competencesGeneral, setCompetencesGeneral)}
-                                                disabled={!edit} />
-                                    {recCompetencesGeneral}
-                                </div>
-
-                                <div className={"mv3"}>
-                                    <Form.Label className={invalidCompetencesSpecific ? "red" : ""}>Específicas</Form.Label>
-                                    <TextareaAutosize onChange={(e)=>setCompetencesSpecific(e.target.value)} value={competencesSpecific} className={"w-100 form-control"}
-                                                onFocus={()=>getRecs("Competencias específicas", recCompetencesSpecific, setRecCompetencesSpecific, competencesSpecific, setCompetencesSpecific)}
-                                                disabled={!edit} />
-                                    {recCompetencesSpecific}
-                                </div>
-
-                            </div>
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
-
-                <div className={"mt4 mb4 form-control"}>
-                    <Form.Label className={invalidEvaluation ? "red" : ""}>Evaluación</Form.Label>
-                    <TextareaAutosize value={evaluation} onChange={(e) => setEvaluation(e.target.value)} className={"w-100 form-control"}
-                                      onFocus={()=>getRecs("Evaluación", recEvaluation, setRecEvaluation, evaluation, setEvaluation)}
-                                      disabled={!edit} ></TextareaAutosize>
-                    {recEvaluation}
-                </div>
-
-                <div className={"mt4 mb4 form-control"}>
-                    <Form.Label className={invalidResults ? "red" : ""}>Resultados de aprendizaje</Form.Label>
-                    <TextareaAutosize value={results} onChange={(e)=>setResults(e.target.value)} className={"w-100 form-control"}
-                                onFocus={()=>getRecs("Resultados de aprendizaje", recResults, setRecResults, results, setResults)}
-                                disabled={!edit} ></TextareaAutosize>
-                    {recResults}
-                </div>
-
-                <div className={"mt2 mb2 form-control"}>
-                    <Form.Label className={invalidLiterature ? "red" : ""}>Bibliografía</Form.Label>
-                    <TextareaAutosize value={literature} onChange={(e)=>setLiterature(e.target.value)} className={"w-100 form-control"}
-                                onFocus={()=>getRecs("Bibliografía", recLiterature, setRecLiterature, literature, setLiterature)}
-                                disabled={!edit} />
-                    {recLiterature}
-                </div>
-
-            </Modal.Body>
-            <Modal.Footer>
-
-                {props.mode === "create" || props.mode === "copy" ?
-                    <></> :
-                    <OverlayTrigger rootClose={true} trigger="click" placement="top" overlay={confirmEliminatePopover}>
-                        <Button variant="danger" disabled={!enableDeleteButton} className={"mr-auto"} key={"delete"}>Eliminar</Button>
-                    </OverlayTrigger>
-                }
-
-                {recsActive ?
-                    <div className={""}>
-                        Coste de las sugerencias: {Math.round(cost*10000)/10000} $
+                        <Form.Group className="w-25 tl pa2" controlId="code">
+                            <Form.Label>Código</Form.Label>
+                            <Form.Control type="text" onChange={event => setCode(event.target.value)} required
+                                          isInvalid={invalidCode}
+                                          value={code} disabled={!codeIsEditable}/>
+                            <Form.Control.Feedback type="invalid">
+                                {codeFeedback}
+                            </Form.Control.Feedback>
+                        </Form.Group>
                     </div>
-                    : <></>
-                }
-                
-                {edit ?
-                    <Button variant="success" key={"confirm"} onClick={() => handleSubmit()}>Confirmar</Button> :
-                    <Button variant="success" key={"confirm"} disabled={!enableEditButton} onClick={() => toggleEdit()}>Editar</Button>
 
-                }
+                    <Form.Group className="mb-3 pv1" controlId="courseName">
+                        <Form.Label>Nombre de la asignatura</Form.Label>
+                        <Form.Control type="text" onChange={event => setCourseName(event.target.value)} required
+                                      isInvalid={invalidCourseName}
+                                      value={courseName} disabled={!edit}/>
+                        <Form.Control.Feedback type="invalid">
+                            Nombre de la asignatura demasiado corto o contiene caracteres inválidos
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <Button variant={"primary"} key={"cancel"} onClick={props.onHide}>{edit ? "Cerrar" :"Cancelar"}</Button>
-            </Modal.Footer>
+                    <Form.Group className="mb-3 pv1" controlId="intlName">
+                        <Form.Label>Nombre en inglés</Form.Label>
+                        <Form.Control type="text" onChange={event => setIntlName(event.target.value)} required
+                                      isInvalid={invalidIntlName}
+                                      onFocus={() => getRecs("Nombre de la asignatura en inglés", recIntlName, setRecIntlName, intlName, setIntlName)}
+                                      value={intlName} disabled={!edit}/>
+                        {recIntlName}
+                        <Form.Control.Feedback type="invalid">
+                            Nombre de la asignatura demasiado corto o contiene caracteres inválidos
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <div className={"flex items-end"}>
+                        <Form.Group className="mb-3 pv1 w-25" controlId="shorthand">
+                            <Form.Label>Abreviatura</Form.Label>
+                            <Form.Control type="text" onChange={event => setShorthand(event.target.value)} required
+                                          isInvalid={invalidShorthand}
+                                          value={shorthand} disabled={!edit}/>
+                            <Form.Control.Feedback type="invalid">
+                                Abreviatura demasiado larga o corta. 2-5 caracteres.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3 pv1 w-75 ph3" controlId="subject">
+                            <Form.Label className={invalidSubject ? "red" : ""}>Materia</Form.Label>
+                            <CreatableSelect
+                                placeholder={"Selecciona..."}
+                                options={subjectOptions}
+                                isDisabled={!edit || subjectOptions === []}
+                                className={"tl"}
+                                onChange={setSubject}
+                                value={subject}
+                            />
+                        </Form.Group>
+                    </div>
+
+                    <div className={"flex items-end"}>
+
+                        <Form.Group className="mb-3 pv1 w-75" controlId="type">
+                            <Form.Label className={invalidType ? "red" : ""}>Tipo</Form.Label>
+                            <Select
+                                placeholder={"Selecciona..."}
+                                options={typeOptions}
+                                className={"tl"}
+                                onChange={setType}
+                                value={type}
+                                isDisabled={!edit}
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3 pv1 w-25 ph3" controlId="ECTS">
+                            <Form.Label className={invalidECTS ? "red" : ""}>ECTS</Form.Label>
+                            <Select
+                                options={ECTSoptions}
+                                className={"tl"}
+                                onChange={setECTS}
+                                isSearchable={false}
+                                value={ECTS}
+                                isDisabled={!edit}
+                            />
+                        </Form.Group>
+                    </div>
+
+                    <Form.Label className={invalidModule ? "red" : ""}>Módulo</Form.Label>
+                    <CreatableSelect
+                        options={moduleOptions}
+                        className={"tl pa2"}
+                        onChange={setModule}
+                        isDisabled={!edit || moduleOptions === []}
+                        value={module}
+                    />
+
+                    <Form.Label className={invalidDepartment ? "red" : ""}>Departamento</Form.Label>
+                    <Select
+                        options={departmentOptions}
+                        className={"tl pa2"}
+                        onChange={handleDepartmentChange}
+                        value={department}
+                        isDisabled={!edit}
+                    />
+
+                    <Form.Label className={invalidCoordinator ? "red" : ""}>Coordinador</Form.Label>
+                    <Select
+                        isDisabled={!edit || department === ""}
+                        options={coordinatorOptions}
+                        className={"tl pa2"}
+                        onChange={setCoordinator}
+                        value={coordinator}
+                    />
+
+                    <div className={"mt4 mb2 form-control"}>
+                        <Form.Label className={invalidMinContents ? "red" : ""}>Descripción de contenidos
+                            mínimos</Form.Label>
+                        <TextareaAutosize onChange={(e) => setMinContents(e.target.value)} value={minContents}
+                                          disabled={!edit} className={"w-100 form-control"}
+                                          onFocus={() => getRecs("Descripción de contenidos mínimos", recMinContents, setRecMinContents, minContents, setMinContents)}
+                        />
+                        {recMinContents}
+                    </div>
+
+                    <div className={"mt4 mb2 form-control"}>
+                        <Form.Label className={invalidProgram ? "red" : ""}>Programa</Form.Label>
+                        <TextareaAutosize onChange={(e) => setProgram(e.target.value)} value={program}
+                                          className={"w-100 form-control"}
+                                          onFocus={() => getRecs("Programa", recProgram, setRecProgram, program, setProgram)}
+                                          disabled={!edit}/>
+                        {recProgram}
+                    </div>
+
+                    <Accordion className={"mt4 mb4 form-control"} defaultActiveKey="0">
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header>Competencias</Accordion.Header>
+                            <Accordion.Body className={"bg-light-gray"}>
+                                <div className={"bg-light-gray"}>
+                                    <div className={"mv3"}>
+                                        <Form.Label
+                                            className={invalidCompetencesBasic ? "red" : ""}>Básicas</Form.Label>
+                                        <TextareaAutosize onChange={(e) => setCompetencesBasic(e.target.value)}
+                                                          value={competencesBasic} className={"w-100 form-control"}
+                                                          onFocus={() => getRecs("Competencias básicas", recCompetencesBasic, setRecCompetencesBasic, competencesBasic, setCompetencesBasic)}
+                                                          disabled={!edit}/>
+                                        {recCompetencesBasic}
+                                    </div>
+
+                                    <div className={"mv3"}>
+                                        <Form.Label className={invalidCompetencesGeneral ? "red" : ""}>Generales y
+                                            transversales</Form.Label>
+                                        <TextareaAutosize onChange={(e) => setCompetencesGeneral(e.target.value)}
+                                                          value={competencesGeneral} className={"w-100 form-control"}
+                                                          onFocus={() => getRecs("Competencias generales", recCompetencesGeneral, setRecCompetencesGeneral, competencesGeneral, setCompetencesGeneral)}
+                                                          disabled={!edit}/>
+                                        {recCompetencesGeneral}
+                                    </div>
+
+                                    <div className={"mv3"}>
+                                        <Form.Label
+                                            className={invalidCompetencesSpecific ? "red" : ""}>Específicas</Form.Label>
+                                        <TextareaAutosize onChange={(e) => setCompetencesSpecific(e.target.value)}
+                                                          value={competencesSpecific} className={"w-100 form-control"}
+                                                          onFocus={() => getRecs("Competencias específicas", recCompetencesSpecific, setRecCompetencesSpecific, competencesSpecific, setCompetencesSpecific)}
+                                                          disabled={!edit}/>
+                                        {recCompetencesSpecific}
+                                    </div>
+
+                                </div>
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
+
+                    <div className={"mt4 mb4 form-control"}>
+                        <Form.Label className={invalidEvaluation ? "red" : ""}>Evaluación</Form.Label>
+                        <TextareaAutosize value={evaluation} onChange={(e) => setEvaluation(e.target.value)}
+                                          className={"w-100 form-control"}
+                                          onFocus={() => getRecs("Evaluación", recEvaluation, setRecEvaluation, evaluation, setEvaluation)}
+                                          disabled={!edit}></TextareaAutosize>
+                        {recEvaluation}
+                    </div>
+
+                    <div className={"mt4 mb4 form-control"}>
+                        <Form.Label className={invalidResults ? "red" : ""}>Resultados de aprendizaje</Form.Label>
+                        <TextareaAutosize value={results} onChange={(e) => setResults(e.target.value)}
+                                          className={"w-100 form-control"}
+                                          onFocus={() => getRecs("Resultados de aprendizaje", recResults, setRecResults, results, setResults)}
+                                          disabled={!edit}></TextareaAutosize>
+                        {recResults}
+                    </div>
+
+                    <div className={"mt2 mb2 form-control"}>
+                        <Form.Label className={invalidLiterature ? "red" : ""}>Bibliografía</Form.Label>
+                        <TextareaAutosize value={literature} onChange={(e) => setLiterature(e.target.value)}
+                                          className={"w-100 form-control"}
+                                          onFocus={() => getRecs("Bibliografía", recLiterature, setRecLiterature, literature, setLiterature)}
+                                          disabled={!edit}/>
+                        {recLiterature}
+                    </div>
+
+                </Modal.Body>
+                <Modal.Footer>
+
+                    {props.mode === "create" || props.mode === "copy" ?
+                        <></> :
+                        <OverlayTrigger rootClose={true} trigger="click" placement="top"
+                                        overlay={confirmEliminatePopover}>
+                            <Button variant="danger" disabled={!enableDeleteButton} className={"mr-auto"}
+                                    key={"delete"}>Eliminar</Button>
+                        </OverlayTrigger>
+                    }
+
+                    {recsActive ?
+                        <div className={""}>
+                            Coste de las sugerencias: {Math.round(cost * 10000) / 10000} $
+                        </div>
+                        : <></>
+                    }
+
+                    {edit ?
+                        <Button variant="success" key={"confirm"} onClick={() => handleSubmit()}>Confirmar</Button> :
+                        <Button variant="success" key={"confirm"} disabled={!enableEditButton}
+                                onClick={() => toggleEdit()}>Editar</Button>
+
+                    }
+
+                    <Button variant={"primary"} key={"cancel"}
+                            onClick={props.onHide}>{edit ? "Cerrar" : "Cancelar"}</Button>
+                </Modal.Footer>
             </Form>
 
         </Modal>

@@ -11,7 +11,6 @@ function updateOptions(options) {
     }
     return update;
 }
-
 export async function tokenFetch(endpoint, options) {
     const url = `${process.env.REACT_APP_API_URL}/${endpoint}`
     return fetch(url, updateOptions(options))

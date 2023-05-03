@@ -41,6 +41,7 @@ const navbarText = (user, logout) => {
 function MainNavbar () {
 
     const user = useSelector ((state) => state.user)
+
     const dispatch = useDispatch()
 
     function logout (){

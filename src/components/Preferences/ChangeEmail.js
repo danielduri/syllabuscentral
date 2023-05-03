@@ -67,7 +67,7 @@ export function ChangeEmail(props) {
 
             <Modal.Body>
                 <h4>{user.userInfo.email}</h4>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form noValidate validated={validated}>
                     <Form.Group className="mb-3 pv3" controlId="formBasicEmail">
                         <Form.Label>Nuevo correo electrónico</Form.Label>
                         <Form.Control type="email" placeholder="ejemplo@universidad.edu" onChange={event => setNewEmail(event.target.value)} required isInvalid={wrongEmail!==""} />
@@ -75,16 +75,12 @@ export function ChangeEmail(props) {
                             {wrongEmail==="used" ?  "Correo electrónico ya usado" : "Correo electrónico inválido"}
                         </Form.Control.Feedback>
                     </Form.Group>
-
-                    <Button variant="primary" type="submit">
-                        Cambiar
-                    </Button>
-
                 </Form>
             </Modal.Body>
 
             <Modal.Footer>
-                <Button onClick={props.onHide}>Cancelar</Button>
+                <Button variant={"primary"} onClick={handleSubmit}>Cambiar</Button>
+                <Button variant={"danger"} onClick={props.onHide}>Cancelar</Button>
             </Modal.Footer>
 
         </Modal>

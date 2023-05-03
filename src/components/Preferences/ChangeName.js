@@ -64,7 +64,7 @@ export function ChangeName(props) {
 
             <Modal.Body>
                 <h4>{user.userInfo.userName}</h4>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form noValidate validated={validated}>
                     <Form.Group className="mb-3 pv3" controlId="formBasicEmail">
                         <Form.Label>Nuevo nombre</Form.Label>
                         <Form.Control type="text" placeholder="John Doe" onChange={event => setNewName(event.target.value)} required isInvalid={wrongName} />
@@ -81,7 +81,8 @@ export function ChangeName(props) {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button onClick={props.onHide}>Cancelar</Button>
+                <Button variant={"primary"} onClick={handleSubmit}>Cambiar</Button>
+                <Button variant={"danger"} onClick={props.onHide}>Cancelar</Button>
             </Modal.Footer>
 
         </Modal>
