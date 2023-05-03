@@ -928,6 +928,7 @@ export function CourseViewer(props) {
                         <Form.Group className="mb-3 pv1 w-25 ph3" controlId="ECTS">
                             <Form.Label className={invalidECTS ? "red" : ""}>ECTS</Form.Label>
                             <Select
+                                placeholder={"Selecciona..."}
                                 options={ECTSoptions}
                                 className={"tl"}
                                 onChange={setECTS}
@@ -940,6 +941,7 @@ export function CourseViewer(props) {
 
                     <Form.Label className={invalidModule ? "red" : ""}>Módulo</Form.Label>
                     <CreatableSelect
+                        placeholder={"Selecciona..."}
                         options={moduleOptions}
                         className={"tl pa2"}
                         onChange={setModule}
@@ -949,6 +951,7 @@ export function CourseViewer(props) {
 
                     <Form.Label className={invalidDepartment ? "red" : ""}>Departamento</Form.Label>
                     <Select
+                        placeholder={"Selecciona..."}
                         options={departmentOptions}
                         className={"tl pa2"}
                         onChange={handleDepartmentChange}
@@ -958,6 +961,7 @@ export function CourseViewer(props) {
 
                     <Form.Label className={invalidCoordinator ? "red" : ""}>Coordinador</Form.Label>
                     <Select
+                        placeholder={"Selecciona..."}
                         isDisabled={!edit || department === ""}
                         options={coordinatorOptions}
                         className={"tl pa2"}
