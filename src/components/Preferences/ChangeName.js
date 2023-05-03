@@ -72,11 +72,6 @@ export function ChangeName(props) {
                             El nombre indicado contiene caracteres inválidos o es demasiado corto
                         </Form.Control.Feedback>
                     </Form.Group>
-
-                    <Button variant="primary" type="submit">
-                        Cambiar
-                    </Button>
-
                 </Form>
             </Modal.Body>
 
