@@ -104,7 +104,7 @@ export function EditSchool(props) {
             <Popover.Body>
                 Esta acción es irreversible. ¿Seguro que desea eliminar esta Facultad?
                 <p></p>
-                <p><strong>Se eliminarán todas las asignaturas, departamentos, usuarios, grados, módulos y materias del mismo.</strong></p>
+                <p><strong>Se eliminarán todas las asignaturas, departamentos, usuarios, grados, módulos y materias de la misma.</strong></p>
                 <h3> </h3>
                 <Button className={"w-100"} variant={"danger"} onClick={handleSchoolDelete}>Sí, seguro</Button>
             </Popover.Body>
