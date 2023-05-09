@@ -8,13 +8,13 @@ export function EditSchool(props) {
     const [wrongName, setWrongName] = useState(false);
 
     const handleSchoolEdit = () => {
-        if(newName!==""){
+        if(!newName.trim()){
             tokenFetch("editSchool", {
                 method: 'put',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
                     schoolID: props.school.schoolID,
-                    schoolName: newName
+                    schoolName: newName.trim()
                 })
             }).then(resp => {
                 if(resp!==undefined){
@@ -29,7 +29,7 @@ export function EditSchool(props) {
     }
 
     const handleSchoolUpload = () => {
-        if(newName===""){
+        if(!newName.trim()){
             setWrongName(true)
         }else{
             setWrongName(false)
@@ -37,7 +37,7 @@ export function EditSchool(props) {
                 method: 'post',
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify({
-                    schoolName: newName
+                    schoolName: newName.trim()
                 })
             }).then(resp => {
                 if(resp!==undefined){
