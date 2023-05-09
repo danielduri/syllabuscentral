@@ -2,13 +2,14 @@ import {Button, Form, Modal, OverlayTrigger, Popover, Tooltip} from "react-boots
 import '../../Modal.css'
 import React, {useEffect, useState} from "react";
 import {tokenFetch} from "../../Common/functions/tokenFetch";
+import {validateName} from "../../Common/functions/misc";
 
 export function EditSchool(props) {
     const [newName, setNewName] = useState("");
     const [wrongName, setWrongName] = useState(false);
 
     const handleSchoolEdit = () => {
-        if(!newName.trim()){
+        if(validateName(newName.trim())){
             tokenFetch("editSchool", {
                 method: 'put',
                 headers: {"Content-type": "application/json"},
@@ -24,12 +25,14 @@ export function EditSchool(props) {
                     }
                 }
             }).catch(error => {throw new Error(error)});
+        }else{
+            setWrongName(true)
         }
 
     }
 
     const handleSchoolUpload = () => {
-        if(!newName.trim()){
+        if(!validateName(newName.trim())){
             setWrongName(true)
         }else{
             setWrongName(false)
