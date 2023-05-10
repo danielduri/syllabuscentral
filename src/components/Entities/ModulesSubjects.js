@@ -58,10 +58,10 @@ function ModulesSubjects (){
                     const item = data[i];
                     if(i>0){
                         if(item.moduleDegreeID!==data[i-1].moduleDegreeID){
-                            itemList.push(<tr className={"bg-light-blue"} key={item.moduleDegreeID+"ModuleRow"}><td colSpan={100}><h4 className={"pv2 dark-blue"}>{item.moduleDegree} (Módulos)</h4></td></tr>)
+                            itemList.push(<tr className={"bg-pink"} key={item.moduleDegreeID+"ModuleRow"}><td colSpan={100}><h4 className={"pv2 black"}>{item.moduleDegree} (Módulos)</h4></td></tr>)
                         }
                     }else{
-                        itemList.push(<tr className={"bg-light-blue"} key={item.moduleDegreeID+"ModuleRow0"}><td colSpan={100}><h4 className={"pv2 dark-blue"}>{item.moduleDegree} (Módulos)</h4></td></tr>)
+                        itemList.push(<tr className={"bg-pink"} key={item.moduleDegreeID+"ModuleRow0"}><td colSpan={100}><h4 className={"pv2 black"}>{item.moduleDegree} (Módulos)</h4></td></tr>)
                     }
 
                     const courses = listCourses(item.courses, setCourse, setCourseViewer)
@@ -89,10 +89,10 @@ function ModulesSubjects (){
                     const item = data[i];
                     if(i>0){
                         if(item.subjectDegreeID!==data[i-1].subjectDegreeID){
-                            itemList.push(<tr className={"bg-orange"} key={item.subjectDegreeID+"SubjectRow"}><td colSpan={100}><h4 className={"pv2 dark-blue"}>{item.subjectDegree} (Materias)</h4></td></tr>)
+                            itemList.push(<tr className={"bg-orange"} key={item.subjectDegreeID+"SubjectRow"}><td colSpan={100}><h4 className={"pv2 black"}>{item.subjectDegree} (Materias)</h4></td></tr>)
                         }
                     }else{
-                        itemList.push(<tr className={"bg-orange"} key={item.subjectDegreeID+"SubjectRow0"}><td colSpan={100}><h4 className={"pv2 dark-blue"}>{item.subjectDegree} (Materias)</h4></td></tr>)
+                        itemList.push(<tr className={"bg-orange"} key={item.subjectDegreeID+"SubjectRow0"}><td colSpan={100}><h4 className={"pv2 black"}>{item.subjectDegree} (Materias)</h4></td></tr>)
                     }
 
                     const courses = listCourses(item.courses, setCourse, setCourseViewer)
@@ -131,7 +131,7 @@ function ModulesSubjects (){
 
 
                     <div className={"center tc pa3"}>
-                        <Button variant={"secondary"} className={"w-20 ma1 bg-light-blue black"} onClick={() => {
+                        <Button variant={"secondary"} className={"w-20 ma1 bg-pink black"} onClick={() => {
                             setNewModule(true)
                         }}>
                             Nuevo módulo</Button>
