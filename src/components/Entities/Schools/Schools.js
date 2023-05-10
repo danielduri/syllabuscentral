@@ -43,7 +43,7 @@ function Schools (){
                         </td>
                         <td>
                             <div>
-                                <Button variant={"primary"} key={item.schoolID+"switch"} className={"mh1"} onClick={() => {
+                                <Button variant={"dark"} key={item.schoolID+"switch"} className={"mh1"} onClick={() => {
                                     tokenFetch('switchSchool', {
                                         method: 'put',
                                         headers: {"Content-type": "application/json"},
