@@ -757,7 +757,7 @@ export function CourseViewer(props) {
         <Popover id="confirmEliminatePopover">
             <Popover.Header as="h3">Confirmación</Popover.Header>
             <Popover.Body>
-                Esta acción es irreversible. ¿Seguro que desea eliminar este modelo?
+                Esta acción es irreversible. ¿Seguro que desea eliminar esta asignatura?
                 <h3></h3>
                 <Button className={"w-100"} variant={"danger"} onClick={() => handleDelete(code)}>Sí, seguro</Button>
             </Popover.Body>
