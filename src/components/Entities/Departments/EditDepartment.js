@@ -78,6 +78,9 @@ export function EditDepartment(props) {
             }else if(resp==="used shorthand"){
                 setWrongShorthand(true)
                 setFeedback("Abreviatura ya utilizada")
+            }else if(resp==="invalid name"){
+                setWrongShorthand(true)
+                setFeedback("Nombre inválido")
             }else{
                 setFeedback(resp)
             }
