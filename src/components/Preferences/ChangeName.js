@@ -39,9 +39,7 @@ export function ChangeName(props) {
                     setValidated(true);
                     dispatch(changeName(resp));
                 }else{
-                    if(resp==="invalid name"){
-                        setWrongName(true);
-                    }
+                    setWrongName(true);
                 }
             }
         })
@@ -69,7 +67,7 @@ export function ChangeName(props) {
                         <Form.Label>Nuevo nombre</Form.Label>
                         <Form.Control type="text" placeholder="John Doe" onChange={event => setNewName(event.target.value)} required isInvalid={wrongName} />
                         <Form.Control.Feedback type="invalid">
-                            El nombre indicado contiene caracteres inválidos o es demasiado corto
+                            El nombre indicado no es válido
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Form>
